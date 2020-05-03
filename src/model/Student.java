@@ -1,6 +1,7 @@
 package model;
 
 import enums.Gender;
+import enums.Type;
 
 public class Student extends Person {
     private int studentId;
@@ -25,6 +26,11 @@ public class Student extends Person {
 
     public long getBudget() {
         return budget;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.STUDENT;
     }
 
     public int getStudentId() {

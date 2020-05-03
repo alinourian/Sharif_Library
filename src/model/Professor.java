@@ -1,6 +1,7 @@
 package model;
 
 import enums.Gender;
+import enums.Type;
 
 public class Professor extends Person{
     private int yearOfEntry;
@@ -23,5 +24,8 @@ public class Professor extends Person{
         return budget;
     }
 
-
+    @Override
+    public Type getType() {
+        return Type.PROFESSOR;
+    }
 }

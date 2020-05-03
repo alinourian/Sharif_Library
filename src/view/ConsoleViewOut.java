@@ -41,16 +41,19 @@ public abstract class ConsoleViewOut {
         }
     }
 
-    public static void createStudent(Student student) {
-        System.out.println("Student successfully created.");
-    }
-
-    public static void createProfessor(Professor professor) {
-        System.out.println("Professor successfully created.");
-    }
-
-    public static void createEmployee(Employee employee) {
-        System.out.println("Worker successfully created.");
+    public static void createPerson(Person person, boolean bool) {
+        if (bool) {
+            if (person.getType() == Type.STUDENT) {
+                System.out.println("Student successfully created.");
+            } else if (person.getType() == Type.PROFESSOR) {
+                System.out.println("Professor successfully created.");
+            } else if (person.getType() == Type.WORKER) {
+                System.out.println("Worker successfully created.");
+            }
+        } else {
+            System.err.println("Person ID number has been used!" +
+                    " You can't use same ID number for two persons.");
+        }
     }
 
     public static void depositStudent(Student student) {

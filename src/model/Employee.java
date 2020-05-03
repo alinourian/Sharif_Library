@@ -2,6 +2,7 @@ package model;
 
 import enums.Gender;
 import enums.Libraries;
+import enums.Type;
 import enums.WeekDays;
 
 import java.util.ArrayList;
@@ -28,5 +29,10 @@ public class Employee extends Person{
 
     void updateWorkingDays(List<WeekDays> newSchedule) {
         workingDays = newSchedule;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.WORKER;
     }
 }

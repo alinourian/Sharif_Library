@@ -57,8 +57,8 @@ public class LibrariesController {
             ConsoleViewOut.createBook(CreateBook.NUMBER_OF_BOOK_INCREASED, test);
         }
     }
-    public void createBook(String bookName, int pages, int publishedYear,
-                           String writer, String language, long ISBN, double price, String translator) {
+    public void createBook(String bookName, int pages, int publishedYear, String writer,
+                           String language, long ISBN, double price, String translator) {
         Book book;
         book = new Book(bookName, pages, publishedYear, writer, language, ISBN, price, translator);
         Book test = CentralManagement.searchBook(book);
@@ -90,26 +90,45 @@ public class LibrariesController {
         ConsoleViewOut.addBook(addBookStatus, book);
     }
 
-    public void createStudent(String fullName, int age, long nationalCode, Gender gender,
-                                     int studentId, int yearOfEntry, String grade, long budget, String department) {
+    public void createStudent(String fullName, int age, long nationalCode, Gender gender, int studentId,
+                              int yearOfEntry, String grade, long budget, String department) {
+        for (Student stu : allStudents) {
+            if (stu.getStudentId() == studentId || stu.getNationalCode() == nationalCode) {
+                ConsoleViewOut.createPerson(stu, false);
+                return;
+            }
+        }
         Student student = new Student(fullName, age, nationalCode, gender,
         studentId, yearOfEntry, grade, budget, department);
         allStudents.add(student);
-        ConsoleViewOut.createStudent(student);
+        ConsoleViewOut.createPerson(student, true);
     }
 
     public void createProfessor(String fullName, int age, long nationalCode, Gender gender,
                               int yearOfEntry, long budget, String department) {
+        for (Professor pro : allProfessors) {
+            if (pro.getNationalCode() == nationalCode) {
+                ConsoleViewOut.createPerson(pro, false);
+                return;
+            }
+        }
         Professor professor = new Professor(fullName, age, nationalCode, gender,
                 yearOfEntry, budget, department);
         allProfessors.add(professor);
-        ConsoleViewOut.createProfessor(professor);
+        ConsoleViewOut.createPerson(professor, true);
     }
 
-    public void createWorker(String fullName, int age, long nationalCode, Gender gender, Libraries libraries) {
+    public void createWorker(String fullName, int age, long nationalCode,
+                             Gender gender, Libraries libraries) {
+        for (Employee emp : allEmployees) {
+            if (emp.getNationalCode() == nationalCode) {
+                ConsoleViewOut.createPerson(emp, false);
+                return;
+            }
+        }
         Employee employee = new Employee(fullName, age, nationalCode, gender, libraries);
         allEmployees.add(employee);
-        ConsoleViewOut.createEmployee(employee);
+        ConsoleViewOut.createPerson(employee, true);
     }
 
     public void depositStudent(int studentId, long increase) {

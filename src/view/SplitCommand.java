@@ -76,8 +76,12 @@ public abstract class SplitCommand {
             } else if (matcher.group(5).equalsIgnoreCase("LibraryA") ||
                     matcher.group(5).equalsIgnoreCase("A")) {
                 libraries = Libraries.LIBRARY_A;
-            } else {
+            } else if (matcher.group(5).equalsIgnoreCase("LibraryB") ||
+                    matcher.group(5).equalsIgnoreCase("B")) {
                 libraries = Libraries.LIBRARY_B;
+            } else {
+                System.err.println("Sorry! We can't just add worker. Library not found!");
+                return;
             }
             controller.createWorker(matcher.group(1), Integer.parseInt(matcher.group(2)),
                     Long.parseLong(matcher.group(3)), gender, libraries);
