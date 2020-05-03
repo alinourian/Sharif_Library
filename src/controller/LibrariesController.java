@@ -1,12 +1,10 @@
 package controller;
 
-import enums.AddBook;
-import enums.CreateBook;
-import enums.Gender;
-import enums.Libraries;
+import enums.*;
 import model.*;
 import view.ConsoleViewOut;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 
 public class LibrariesController {
@@ -129,6 +127,67 @@ public class LibrariesController {
         Employee employee = new Employee(fullName, age, nationalCode, gender, libraries);
         allEmployees.add(employee);
         ConsoleViewOut.createPerson(employee, true);
+    }
+
+    public void addStudent(int studentId) {
+        for (Student student : allStudents) {
+            if(student.getStudentId() == studentId) {
+                CentralManagement.allActiveStudents.add(student);
+                CentralLibrary.getInstance().addMember(student);
+                ConsoleViewOut.addPerson(student);
+                return;
+            }
+        }
+        ConsoleViewOut.addStudentFailed(studentId);
+    }
+
+    public void addProfessor(Long nationalCode) {
+        for (Professor professor : allProfessors) {
+            if (professor.getNationalCode() == nationalCode) {
+                CentralManagement.allActiveProfessors.add(professor);
+                CentralLibrary.getInstance().addMember(professor);
+                ConsoleViewOut.addPerson(professor);
+                return;
+            }
+        }
+        ConsoleViewOut.addProfessorFailed(nationalCode);
+    }
+
+    public void addEmployee(Long nationalCode) {
+        for (Employee employee : allEmployees) {
+            if (employee.getNationalCode() == nationalCode) {
+                CentralManagement.allActiveEmployees.add(employee);
+                if (employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
+                    if (CentralLibrary.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
+                        CentralLibrary.getInstance().addMember(employee);
+                        CentralLibrary.getInstance().addEmployee(employee);
+                        ConsoleViewOut.addPerson(employee);
+                    } else {
+                        ConsoleViewOut.addEmployeeFailed(nationalCode, false);
+                        // false is because of the capacity of the library
+                    }
+                } else if (employee.getWorkPlace() == Libraries.LIBRARY_A) {
+                    if (LibraryA.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
+                        LibraryA.getInstance().addEmployee(employee);
+                        ConsoleViewOut.addPerson(employee);
+                    } else {
+                        ConsoleViewOut.addEmployeeFailed(nationalCode, false);
+                        // false is because of the capacity of the library
+                    }
+                } else if (employee.getWorkPlace() == Libraries.LIBRARY_B) {
+                    if (LibraryB.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
+                        LibraryB.getInstance().addEmployee(employee);
+                        ConsoleViewOut.addPerson(employee);
+                    } else {
+                        ConsoleViewOut.addEmployeeFailed(nationalCode, false);
+                        // false is because of the capacity of the library
+                    }
+                }
+                return;
+            }
+        }
+        ConsoleViewOut.addEmployeeFailed(nationalCode, true);
+        // true is because of the capacity of the library
     }
 
     public void depositStudent(int studentId, long increase) {

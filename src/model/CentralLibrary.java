@@ -2,6 +2,7 @@ package model;
 
 import enums.AddBook;
 import enums.Libraries;
+import enums.Type;
 import enums.WeekDays;
 
 import java.util.ArrayList;
@@ -136,13 +137,16 @@ public class CentralLibrary implements Library {
         return 0;
     }
 
-    public void addMember (Person person, String job) {
-        if (job.equalsIgnoreCase("professor")) {
+    public void addMember(Person person) {
+        if (person.getType() == Type.PROFESSOR) {
             Professor professor = (Professor)person;
             CentralManagement.allActiveProfessors.add(professor);
-        }else if (job.equalsIgnoreCase("student")) {
+        } else if (person.getType() == Type.STUDENT) {
             Student student = (Student)person;
             CentralManagement.allActiveStudents.add(student);
+        } else if (person.getType() == Type.WORKER) {
+            Employee employee = (Employee)person;
+            CentralManagement.allActiveEmployees.add(employee);
         }
     }
 

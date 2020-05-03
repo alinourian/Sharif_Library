@@ -21,7 +21,7 @@ public abstract class ConsoleViewOut {
         if (status == AddBook.ADDED_SUCCESSFULLY) {
             System.out.println("You just successfully added one book to this library.");
             Book test = CentralManagement.searchBook(book);
-            System.out.println("available: " + test.getNumbersAvailable());
+            System.out.println("available: " + book.getNumbersAvailable());
         } else if (status == AddBook.NEW_ADDED_SUCCESSFULLY) {
             System.out.println("You just successfully added a new book to this library.");
         } else if (status == AddBook.LIBRARY_IS_FULL) {
@@ -66,7 +66,35 @@ public abstract class ConsoleViewOut {
                 + professor.getBudget());
     }
 
+    public static void addPerson(Person person) {
+        Type type = person.getType();
+        if (type == Type.STUDENT) {
+            System.out.println("New student with national-code\"" + person.getNationalCode() +
+                    "\" becomes a member of CentralLibrary");
+        } else if (type == Type.PROFESSOR) {
+            System.out.println("New professor with national-code \"" + person.getNationalCode() +
+                    "\" becomes a member of CentralLibrary");
+        } else if (type == Type.WORKER) {
+            System.out.println("New employee with national-code \"" + person.getNationalCode() +
+                    "\" becomes a member of CentralLibrary");
+        }
+    }
 
+    public static void addStudentFailed(int studentId) {
+        System.out.println("Student with studentID \"" + studentId + "\" does not exist!");
+    }
+
+    public static void addProfessorFailed(Long nationalCode) {
+        System.out.println("Professor with national-code \"" + nationalCode + "\" does not exist!");
+    }
+
+    public static void addEmployeeFailed(Long nationalCode, boolean bool) {
+        if (bool) {
+            System.out.println("Worker with national-code \"" + nationalCode + "\" does not exist!");
+        } else {
+            System.out.println("Sorry! Library capacity for workers is full! Can not add worker to this library.");
+        }
+    }
 
     public static void invalidCommands() {
         System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
