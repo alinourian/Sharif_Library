@@ -17,9 +17,9 @@ public enum ConsoleCommands {
             "(\\w+)\\s+(\\w+)\\s+(\\w+)\\s+(\\w+)\\s+(\\w+)\\s*"),//6
     DEPOSIT_STUDENT("(?i)\\s*deposit\\s+student\\s+(\\d+)\\s+(\\d+)\\s*"),//7
     DEPOSIT_PROFESSOR("(?i)\\s*deposit\\s+professor\\s+(\\d+)\\s+(\\d+)\\s*"),//8
-    ADD_STUDENT("(?i)\\s*add\\s+person\\s+student\\s+(\\w+)\\s*"),//9
-    ADD_PROFESSOR("(?i)\\s*add\\s+person\\s+professor\\s+(\\w+)\\s*"),//10
-    ADD_WORKER("(?i)\\s*add\\s+worker\\s+(\\w+)\\s+(\\w+)\\s*"),//11
+    ADD_STUDENT("(?i)\\s*add\\s+person\\s+student\\s+(\\d+)\\s*"),//9
+    ADD_PROFESSOR("(?i)\\s*add\\s+person\\s+professor\\s+(\\d+)\\s*"),//10
+    ADD_WORKER("(?i)\\s*add\\s+worker\\s+(\\d+)\\s+(\\w+)\\s*"),//11
     SET_SCHEDULE("(?i)\\s*set\\s+schedule\\s+(\\w+)\\s+(\\w+)" +//12
             "(\\d\\s+\\d\\s+\\d\\s+\\d\\s+\\d\\s+\\d)\\s*"),//12
     FIND_BOOK("(?i)\\s*find\\s+book\\s+(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*" +//13

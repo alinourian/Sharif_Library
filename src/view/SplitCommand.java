@@ -1,8 +1,12 @@
 package view;
 
 import controller.*;
+import enums.AddBook;
 import enums.Gender;
 import enums.Libraries;
+import model.CentralLibrary;
+import model.LibraryA;
+import model.LibraryB;
 
 import java.util.regex.Matcher;
 
@@ -80,7 +84,7 @@ public abstract class SplitCommand {
                     matcher.group(5).equalsIgnoreCase("B")) {
                 libraries = Libraries.LIBRARY_B;
             } else {
-                System.err.println("Sorry! We can't just add worker. Library not found!");
+                System.err.println("Sorry! We can't create worker. Library is not found!");
                 return;
             }
             controller.createWorker(matcher.group(1), Integer.parseInt(matcher.group(2)),
@@ -116,6 +120,41 @@ public abstract class SplitCommand {
         }
     }
 
+    public static void addStudent(String command) {
+        Matcher matcher = ConsoleCommands.ADD_STUDENT.getMatcher(command);
+        if (matcher.find()) {
+            controller.addStudent(Integer.parseInt(matcher.group(1)));
+        }
+    }
+
+    public static void addProfessor(String command) {
+        Matcher matcher = ConsoleCommands.ADD_PROFESSOR.getMatcher(command);
+        if (matcher.find()) {
+            controller.addProfessor(Long.parseLong(matcher.group(1)));
+        }
+    }
+
+    public static void addEmployee(String command) {
+        Matcher matcher = ConsoleCommands.ADD_WORKER.getMatcher(command);
+        if (matcher.find()) {
+            String libraryName = matcher.group(2);
+            Libraries libraries;
+            if (libraryName.equalsIgnoreCase("mainLibrary") ||
+                    libraryName.equalsIgnoreCase("centralLibrary")) {
+                libraries = Libraries.CENTRAL_LIBRARY;
+            } else if (libraryName.equalsIgnoreCase("libraryA") ||
+                    libraryName.equalsIgnoreCase("A")) {
+                libraries = Libraries.LIBRARY_A;
+            } else if (libraryName.equalsIgnoreCase("libraryB") ||
+                    libraryName.equalsIgnoreCase("B")) {
+                libraries = Libraries.LIBRARY_B;
+            } else {
+                System.err.println("Sorry! We can't create worker. Library is not found!");
+                return;
+            }
+            controller.addEmployee(Long.parseLong(matcher.group(1)), libraries);
+        }
+    }
 
 
 }

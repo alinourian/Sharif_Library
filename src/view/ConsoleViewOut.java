@@ -52,17 +52,17 @@ public abstract class ConsoleViewOut {
             }
         } else {
             System.err.println("Person ID number has been used!" +
-                    " You can't use same ID number for two persons.");
+                    "\nYou can't use same ID number for two persons.");
         }
     }
 
     public static void depositStudent(Student student) {
-        System.out.println("Budget successfully increased. new budget becomes: "
+        System.out.println("Budget successfully increased.\nnew budget becomes: "
                 + student.getBudget());
     }
 
     public static void depositProfessor(Professor professor) {
-        System.out.println("Budget successfully increased. new budget becomes: "
+        System.out.println("Budget successfully increased.\nnew budget becomes: "
                 + professor.getBudget());
     }
 
@@ -88,11 +88,14 @@ public abstract class ConsoleViewOut {
         System.out.println("Professor with national-code \"" + nationalCode + "\" does not exist!");
     }
 
-    public static void addEmployeeFailed(Long nationalCode, boolean bool) {
-        if (bool) {
+    public static void addEmployeeFailed(Long nationalCode, AddWorker status) {
+        if (status == AddWorker.INVALID_NC) {
             System.out.println("Worker with national-code \"" + nationalCode + "\" does not exist!");
-        } else {
-            System.out.println("Sorry! Library capacity for workers is full! Can not add worker to this library.");
+        } else if (status == AddWorker.LIBRARY_IS_FULL) {
+            System.out.println("Sorry! Library capacity for workers is full!\nCan not add worker to this library.");
+        } else if (status == AddWorker.WRONG_LIBRARY_TO_ADD) {
+            System.out.println("Sorry! Can not add this worker to this library!\n" +
+                    "Worker with national-code \"" + nationalCode + "\" is not for this library");
         }
     }
 

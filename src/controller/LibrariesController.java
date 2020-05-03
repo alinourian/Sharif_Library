@@ -153,9 +153,9 @@ public class LibrariesController {
         ConsoleViewOut.addProfessorFailed(nationalCode);
     }
 
-    public void addEmployee(Long nationalCode) {
+    public void addEmployee(Long nationalCode, Libraries libraries) {
         for (Employee employee : allEmployees) {
-            if (employee.getNationalCode() == nationalCode) {
+            if (employee.getNationalCode() == nationalCode && libraries == employee.getWorkPlace()) {
                 CentralManagement.allActiveEmployees.add(employee);
                 if (employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
                     if (CentralLibrary.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
@@ -163,15 +163,14 @@ public class LibrariesController {
                         CentralLibrary.getInstance().addEmployee(employee);
                         ConsoleViewOut.addPerson(employee);
                     } else {
-                        ConsoleViewOut.addEmployeeFailed(nationalCode, false);
-                        // false is because of the capacity of the library
+                        ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
                     }
                 } else if (employee.getWorkPlace() == Libraries.LIBRARY_A) {
                     if (LibraryA.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
                         LibraryA.getInstance().addEmployee(employee);
                         ConsoleViewOut.addPerson(employee);
                     } else {
-                        ConsoleViewOut.addEmployeeFailed(nationalCode, false);
+                        ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
                         // false is because of the capacity of the library
                     }
                 } else if (employee.getWorkPlace() == Libraries.LIBRARY_B) {
@@ -179,15 +178,16 @@ public class LibrariesController {
                         LibraryB.getInstance().addEmployee(employee);
                         ConsoleViewOut.addPerson(employee);
                     } else {
-                        ConsoleViewOut.addEmployeeFailed(nationalCode, false);
+                        ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
                         // false is because of the capacity of the library
                     }
                 }
                 return;
+            } else if (employee.getNationalCode() == nationalCode && libraries != employee.getWorkPlace()) {
+                ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.WRONG_LIBRARY_TO_ADD);
             }
         }
-        ConsoleViewOut.addEmployeeFailed(nationalCode, true);
-        // true is because of the capacity of the library
+        ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.INVALID_NC);
     }
 
     public void depositStudent(int studentId, long increase) {
@@ -209,6 +209,7 @@ public class LibrariesController {
             }
         }
     }
+
 
 
 }

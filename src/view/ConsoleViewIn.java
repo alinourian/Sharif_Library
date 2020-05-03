@@ -26,11 +26,14 @@ public abstract class ConsoleViewIn {
             } else if (ConsoleCommands.ADD_BOOK_TO_STORE.getMatcher(command).matches()) {//3
                 System.out.println(3);
             } else if (ConsoleCommands.ADD_STUDENT.getMatcher(command).matches()) {//4
-                System.out.println(4);
+                SplitCommand.addStudent(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.ADD_PROFESSOR.getMatcher(command).matches()) {//5
-                System.out.println(5);
+                SplitCommand.addProfessor(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.ADD_WORKER.getMatcher(command).matches()) {//6
-                System.out.println(6);
+                SplitCommand.addEmployee(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.CREATE_BOOK.getMatcher(command).matches()) {//7
                 SplitCommand.createBook(command);
                 System.out.println("\n");
