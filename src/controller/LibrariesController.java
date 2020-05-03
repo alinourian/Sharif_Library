@@ -128,9 +128,13 @@ public class LibrariesController {
     public void addStudent(int studentId) {
         for (Student student : allStudents) {
             if(student.getStudentId() == studentId) {
-                CentralManagement.allActiveStudents.add(student);
-                CentralLibrary.getInstance().addMember(student);
-                ConsoleViewOut.addPerson(student);
+                if (!CentralManagement.allActiveStudents.contains(student)) {
+                    CentralManagement.allActiveStudents.add(student);
+                    CentralLibrary.getInstance().addMember(student);
+                    ConsoleViewOut.addPerson(student, true);
+                } else {
+                    ConsoleViewOut.addPerson(student, false);
+                }
                 return;
             }
         }
@@ -140,9 +144,13 @@ public class LibrariesController {
     public void addProfessor(Long nationalCode) {
         for (Professor professor : allProfessors) {
             if (professor.getNationalCode() == nationalCode) {
-                CentralManagement.allActiveProfessors.add(professor);
-                CentralLibrary.getInstance().addMember(professor);
-                ConsoleViewOut.addPerson(professor);
+                if (!CentralManagement.allActiveProfessors.contains(professor)) {
+                    CentralManagement.allActiveProfessors.add(professor);
+                    CentralLibrary.getInstance().addMember(professor);
+                    ConsoleViewOut.addPerson(professor, true);
+                } else {
+                    ConsoleViewOut.addPerson(professor, false);
+                }
                 return;
             }
         }
@@ -151,36 +159,42 @@ public class LibrariesController {
 
     public void addEmployee(Long nationalCode, Libraries libraries) {
         for (Employee employee : allEmployees) {
-            if (employee.getNationalCode() == nationalCode && libraries == employee.getWorkPlace()) {
-                CentralManagement.allActiveEmployees.add(employee);
-                if (employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
-                    if (CentralLibrary.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
-                        CentralLibrary.getInstance().addMember(employee);
-                        CentralLibrary.getInstance().addEmployee(employee);
-                        ConsoleViewOut.addPerson(employee);
-                    } else {
-                        ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
+            if (employee.getNationalCode() == nationalCode) {
+                if (CentralManagement.allActiveEmployees.contains(employee)) {
+                    ConsoleViewOut.addPerson(employee, false);
+                    return;
+                }
+                if (libraries == employee.getWorkPlace()) {
+                    CentralManagement.allActiveEmployees.add(employee);
+                    if (employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
+                        if (CentralLibrary.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
+                            CentralLibrary.getInstance().addMember(employee);
+                            CentralLibrary.getInstance().addEmployee(employee);
+                            ConsoleViewOut.addPerson(employee, true);
+                        } else {
+                            ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
+                        }
+                    } else if (employee.getWorkPlace() == Libraries.LIBRARY_A) {
+                        if (LibraryA.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
+                            LibraryA.getInstance().addEmployee(employee);
+                            ConsoleViewOut.addPerson(employee, true);
+                        } else {
+                            ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
+                            // false is because of the capacity of the library
+                        }
+                    } else if (employee.getWorkPlace() == Libraries.LIBRARY_B) {
+                        if (LibraryB.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
+                            LibraryB.getInstance().addEmployee(employee);
+                            ConsoleViewOut.addPerson(employee, true);
+                        } else {
+                            ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
+                            // false is because of the capacity of the library
+                        }
                     }
-                } else if (employee.getWorkPlace() == Libraries.LIBRARY_A) {
-                    if (LibraryA.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
-                        LibraryA.getInstance().addEmployee(employee);
-                        ConsoleViewOut.addPerson(employee);
-                    } else {
-                        ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
-                        // false is because of the capacity of the library
-                    }
-                } else if (employee.getWorkPlace() == Libraries.LIBRARY_B) {
-                    if (LibraryB.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
-                        LibraryB.getInstance().addEmployee(employee);
-                        ConsoleViewOut.addPerson(employee);
-                    } else {
-                        ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.LIBRARY_IS_FULL);
-                        // false is because of the capacity of the library
-                    }
+                } else if (libraries != employee.getWorkPlace()) {
+                    ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.WRONG_LIBRARY_TO_ADD);
                 }
                 return;
-            } else if (employee.getNationalCode() == nationalCode && libraries != employee.getWorkPlace()) {
-                ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.WRONG_LIBRARY_TO_ADD);
             }
         }
         ConsoleViewOut.addEmployeeFailed(nationalCode, AddWorker.INVALID_NC);
@@ -191,9 +205,10 @@ public class LibrariesController {
             if (student.getStudentId() == studentId) {
                 student.addBudget(increase);
                 ConsoleViewOut.depositStudent(student);
-                break;
+                return;
             }
         }
+        ConsoleViewOut.depositFailed();
     }
 
     public void depositProfessor(long nationalCode, long increase) {
@@ -204,6 +219,7 @@ public class LibrariesController {
                 break;
             }
         }
+        ConsoleViewOut.depositFailed();
     }
 
 

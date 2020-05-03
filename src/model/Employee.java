@@ -39,11 +39,11 @@ public class Employee extends Person{
     @Override
     public String toString() {
         return "Employee{" +
-                ", FullName='" + FullName + '\'' +
+                "FullName='" + FullName + '\'' +
                 ", age=" + age +
                 ", nationalCode=" + nationalCode +
                 ", gender=" + gender +
-                "workPlace=" + workPlace +
+                ", workPlace=" + workPlace +
                 ", workingDays=" + workingDays +
                 '}';
     }

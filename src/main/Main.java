@@ -23,8 +23,6 @@ public class Main {
         create book book1 177 1397 ali persian 123456789 10000
         You have successfully added one of this book.
         7-Successfully the book has been created.
-        add book book1,123456789,1397
-        INVALID COMMAND! PLEASE TRY AGAIN!
         add book a book1,123456789,1397
 
          */
