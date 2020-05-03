@@ -1,12 +1,8 @@
 package view;
 
 import controller.*;
-import enums.AddBook;
 import enums.Gender;
 import enums.Libraries;
-import model.CentralLibrary;
-import model.LibraryA;
-import model.LibraryB;
 
 import java.util.regex.Matcher;
 

@@ -1,25 +1,11 @@
 package main;
 
-import model.Book;
-import model.CentralLibrary;
-import model.CentralManagement;
 import view.*;
 
 public class Main {
     public static void main(String[] args) {
         ConsoleViewIn.start();
-        System.out.println("\nAll existing books are: ");
-        for (Book book : CentralManagement.allBooksEverExist) {
-            System.out.println(book);
-        }
-        System.out.println("\nBooks available in libraries: ");
-        for (Book book : CentralManagement.allBooksInLibraries.keySet()) {
-            System.out.println(book);
-        }
-        System.out.println("\nBooks are in Central-Library: ");
-        for (Book book : CentralLibrary.getInstance().getBooks().keySet()) {
-            System.out.println(book);
-        }
+        AtTheEnd.run();
         /*
         String command = "  1932  /5/   4";
         String[] help = command.split("/");

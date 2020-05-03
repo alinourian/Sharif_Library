@@ -4,16 +4,15 @@ import enums.*;
 import model.*;
 import view.ConsoleViewOut;
 
-import java.sql.Struct;
 import java.util.ArrayList;
 
 public class LibrariesController {
     private static LibrariesController instance;
 
-    private Time time;
-    private CentralLibrary centralLibrary;
-    private LibraryA libraryA;
-    private LibraryB libraryB;
+    private final Time time;
+    private CentralLibrary centralLibrary = CentralLibrary.getInstance();
+    private LibraryA libraryA = LibraryA.getInstance();
+    private LibraryB libraryB = LibraryB.getInstance();
 
     ArrayList<Employee> allEmployees;
     ArrayList<Professor> allProfessors;
@@ -28,9 +27,6 @@ public class LibrariesController {
 
     private LibrariesController() {
         time = Time.getInstance();
-        centralLibrary = CentralLibrary.getInstance();
-        libraryA = LibraryA.getInstance();
-        libraryB = LibraryB.getInstance();
         allEmployees = new ArrayList<>();
         allProfessors = new ArrayList<>();
         allStudents = new ArrayList<>();
@@ -211,5 +207,15 @@ public class LibrariesController {
     }
 
 
+    public ArrayList<Employee> getAllEmployees() {
+        return allEmployees;
+    }
 
+    public ArrayList<Professor> getAllProfessors() {
+        return allProfessors;
+    }
+
+    public ArrayList<Student> getAllStudents() {
+        return allStudents;
+    }
 }

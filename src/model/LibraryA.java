@@ -128,4 +128,8 @@ public class LibraryA implements Library {
     public int getNumbersOfEmployee() {
         return numbersOfEmployee;
     }
+
+    public Map<Book, Integer> getBooks() {
+        return books;
+    }
 }

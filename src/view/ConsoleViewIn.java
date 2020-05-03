@@ -1,5 +1,7 @@
 package view;
 
+import main.AtTheEnd;
+
 import java.util.Scanner;
 
 public abstract class ConsoleViewIn {
@@ -68,6 +70,8 @@ public abstract class ConsoleViewIn {
                 System.out.println(19);
             } else if (ConsoleCommands.NEXT_DAY.getMatcher(command).matches()) {//20
                 System.out.println(20);
+            } else if (command.equals("000")) {//0000 test
+                AtTheEnd.run();
             } else {//21
                 System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
             }

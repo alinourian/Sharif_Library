@@ -35,4 +35,16 @@ public class Employee extends Person{
     public Type getType() {
         return Type.WORKER;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                ", FullName='" + FullName + '\'' +
+                ", age=" + age +
+                ", nationalCode=" + nationalCode +
+                ", gender=" + gender +
+                "workPlace=" + workPlace +
+                ", workingDays=" + workingDays +
+                '}';
+    }
 }

@@ -36,4 +36,19 @@ public class Student extends Person {
     public int getStudentId() {
         return studentId;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                ", FullName='" + FullName + '\'' +
+                ", age=" + age +
+                ", nationalCode=" + nationalCode +
+                ", gender=" + gender +
+                "studentId=" + studentId +
+                ", yearOfEntry=" + yearOfEntry +
+                ", grade='" + grade + '\'' +
+                ", budget=" + budget +
+                ", department='" + department + '\'' +
+                '}';
+    }
 }

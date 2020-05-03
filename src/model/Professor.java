@@ -28,4 +28,17 @@ public class Professor extends Person{
     public Type getType() {
         return Type.PROFESSOR;
     }
+
+    @Override
+    public String toString() {
+        return "Professor{" +
+                ", FullName='" + FullName + '\'' +
+                ", age=" + age +
+                ", nationalCode=" + nationalCode +
+                ", gender=" + gender +
+                "yearOfEntry=" + yearOfEntry +
+                ", budget=" + budget +
+                ", department='" + department + '\'' +
+                '}';
+    }
 }
