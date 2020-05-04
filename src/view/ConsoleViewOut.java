@@ -101,11 +101,11 @@ public abstract class ConsoleViewOut {
         System.out.println("Student with studentID \"" + studentId + "\" does not exist!");
     }
 
-    public static void addProfessorFailed(Long nationalCode) {
+    public static void addProfessorFailed(long nationalCode) {
         System.out.println("Professor with national-code \"" + nationalCode + "\" does not exist!");
     }
 
-    public static void addEmployeeFailed(Long nationalCode, AddWorker status) {
+    public static void addEmployeeFailed(long nationalCode, AddWorker status) {
         if (status == AddWorker.INVALID_NC) {
             System.out.println("Worker with national-code \"" + nationalCode + "\" does not exist!");
         } else if (status == AddWorker.LIBRARY_IS_FULL) {
@@ -113,6 +113,19 @@ public abstract class ConsoleViewOut {
         } else if (status == AddWorker.WRONG_LIBRARY_TO_ADD) {
             System.out.println("Sorry! Can not add this worker to this library!\n" +
                     "Worker with national-code \"" + nationalCode + "\" is not for this library");
+        }
+    }
+
+    public static void setSchedule(long nationalCode, SetSchedule status) {
+        if (status == SetSchedule.WORKER_NOT_EXIST) {
+            System.out.println("Sorry! Worker with national-code \"" + nationalCode +
+                    "\" is not exist.");
+        } else if (status == SetSchedule.WRONG_LIBRARY) {
+            System.out.println("Sorry! The worker with national-code \"" + nationalCode +
+                    "\" belongs to another library.\nPlease enter the correct library.");
+        } else if (status == SetSchedule.SUCCESSFUL) {
+            System.out.println("The schedule of worker with national-code \"" + nationalCode +
+                    "\" has been changed.");
         }
     }
 

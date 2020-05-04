@@ -63,7 +63,8 @@ public abstract class ConsoleViewIn {
             } else if (ConsoleCommands.LOAN_BOOK.getMatcher(command).matches()) {//16
                 System.out.println(16);
             } else if (ConsoleCommands.SET_SCHEDULE.getMatcher(command).matches()) {//17
-                System.out.println(17);
+                SplitCommand.setSchedule(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.SET_DISCOUNT.getMatcher(command).matches()) {//18
                 System.out.println(18);
             } else if (ConsoleCommands.SELL_BOOK.getMatcher(command).matches()) {//19

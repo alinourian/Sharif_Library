@@ -1,9 +1,6 @@
 package model;
 
-import enums.AddBook;
-import enums.Libraries;
-import enums.Type;
-import enums.WeekDays;
+import enums.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,9 +141,6 @@ public class CentralLibrary implements Library {
         } else if (person.getType() == Type.STUDENT) {
             Student student = (Student)person;
             CentralManagement.allActiveStudents.add(student);
-        } else if (person.getType() == Type.WORKER) {
-            Employee employee = (Employee)person;
-            CentralManagement.allActiveEmployees.add(employee);
         }
     }
 

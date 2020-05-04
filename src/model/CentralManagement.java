@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class CentralManagement {
+
+    private static final ArrayList<Employee> allEmployees = new ArrayList<>();
+    private static final ArrayList<Professor> allProfessors = new ArrayList<>();
+    private static final ArrayList<Student> allStudents = new ArrayList<>();
+
     public static List<Book> allBooksEverExist = new ArrayList<>();
     public static List<Employee> allActiveEmployees = new ArrayList<>();
     public static List<Professor> allActiveProfessors = new ArrayList<>();
@@ -24,5 +29,63 @@ public abstract class CentralManagement {
             }
         }
         return null;
+    }
+
+
+    public static Student getStudentByStudentIdInAllStudents(int studentId) {
+        for (Student student : allStudents) {
+            if (student.getStudentId() == studentId) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    public static Student getStudentByStudentIdInAllActiveStudents(int studentId) {
+        for (Student student : allActiveStudents) {
+            if (student.getStudentId() == studentId) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    public static Professor getProfessorByNCInAllProfessors(long nationalCode) {
+        for (Professor professor : allProfessors) {
+            if (professor.getNationalCode() == nationalCode) {
+                return professor;
+            }
+        }
+        return null;
+    }
+
+    public static Professor getProfessorByNCInAllActiveProfessors(long nationalCode) {
+        for (Professor professor : allActiveProfessors) {
+            if (professor.getNationalCode() == nationalCode) {
+                return professor;
+            }
+        }
+        return null;
+    }
+
+    public static Employee getEmployeeByNCInAllEmployees(long nationalCode) {
+        for (Employee employee : allEmployees) {
+            if (employee.getNationalCode() == nationalCode) {
+                return employee;
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<Employee> getAllEmployees() {
+        return allEmployees;
+    }
+
+    public static ArrayList<Professor> getAllProfessors() {
+        return allProfessors;
+    }
+
+    public static ArrayList<Student> getAllStudents() {
+        return allStudents;
     }
 }

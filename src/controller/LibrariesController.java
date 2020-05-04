@@ -14,10 +14,6 @@ public class LibrariesController {
     private LibraryA libraryA = LibraryA.getInstance();
     private LibraryB libraryB = LibraryB.getInstance();
 
-    ArrayList<Employee> allEmployees;
-    ArrayList<Professor> allProfessors;
-    ArrayList<Student> allStudents;
-
     public static LibrariesController getInstance() {
         if(instance == null) {
             instance = new LibrariesController();
@@ -27,9 +23,9 @@ public class LibrariesController {
 
     private LibrariesController() {
         time = Time.getInstance();
-        allEmployees = new ArrayList<>();
-        allProfessors = new ArrayList<>();
-        allStudents = new ArrayList<>();
+        //allEmployees = new ArrayList<>();
+        //allProfessors = new ArrayList<>();
+        //allStudents = new ArrayList<>();
     }
 
     public void setDate(int year, int month, int day) {
@@ -86,21 +82,21 @@ public class LibrariesController {
 
     public void createStudent(String fullName, int age, long nationalCode, Gender gender, int studentId,
                               int yearOfEntry, String grade, long budget, String department) {
-        for (Student stu : allStudents) {
+        for (Student stu : CentralManagement.getAllStudents()) {
             if (stu.getStudentId() == studentId || stu.getNationalCode() == nationalCode) {
                 ConsoleViewOut.createPerson(stu, false);
                 return;
             }
         }
         Student student = new Student(fullName, age, nationalCode, gender,
-        studentId, yearOfEntry, grade, budget, department);
-        allStudents.add(student);
+                studentId, yearOfEntry, grade, budget, department);
+        CentralManagement.getAllStudents().add(student);
         ConsoleViewOut.createPerson(student, true);
     }
 
     public void createProfessor(String fullName, int age, long nationalCode, Gender gender,
                               int yearOfEntry, long budget, String department) {
-        for (Professor pro : allProfessors) {
+        for (Professor pro : CentralManagement.getAllProfessors()) {
             if (pro.getNationalCode() == nationalCode) {
                 ConsoleViewOut.createPerson(pro, false);
                 return;
@@ -108,67 +104,61 @@ public class LibrariesController {
         }
         Professor professor = new Professor(fullName, age, nationalCode, gender,
                 yearOfEntry, budget, department);
-        allProfessors.add(professor);
+        CentralManagement.getAllProfessors().add(professor);
         ConsoleViewOut.createPerson(professor, true);
     }
 
     public void createWorker(String fullName, int age, long nationalCode,
                              Gender gender, Libraries libraries) {
-        for (Employee emp : allEmployees) {
+        for (Employee emp : CentralManagement.getAllEmployees()) {
             if (emp.getNationalCode() == nationalCode) {
                 ConsoleViewOut.createPerson(emp, false);
                 return;
             }
         }
         Employee employee = new Employee(fullName, age, nationalCode, gender, libraries);
-        allEmployees.add(employee);
+        CentralManagement.getAllEmployees().add(employee);
         ConsoleViewOut.createPerson(employee, true);
     }
 
     public void addStudent(int studentId) {
-        for (Student student : allStudents) {
-            if(student.getStudentId() == studentId) {
-                if (!CentralManagement.allActiveStudents.contains(student)) {
-                    CentralManagement.allActiveStudents.add(student);
-                    CentralLibrary.getInstance().addMember(student);
-                    ConsoleViewOut.addPerson(student, true);
-                } else {
-                    ConsoleViewOut.addPerson(student, false);
-                }
-                return;
+        Student student = CentralManagement.getStudentByStudentIdInAllStudents(studentId);
+        if (student == null) {
+            ConsoleViewOut.addStudentFailed(studentId);
+        } else {
+            if (!CentralManagement.allActiveStudents.contains(student)) {
+                CentralLibrary.getInstance().addMember(student);
+                ConsoleViewOut.addPerson(student, true);
+            } else {
+                ConsoleViewOut.addPerson(student, false);
             }
         }
-        ConsoleViewOut.addStudentFailed(studentId);
     }
 
-    public void addProfessor(Long nationalCode) {
-        for (Professor professor : allProfessors) {
-            if (professor.getNationalCode() == nationalCode) {
-                if (!CentralManagement.allActiveProfessors.contains(professor)) {
-                    CentralManagement.allActiveProfessors.add(professor);
-                    CentralLibrary.getInstance().addMember(professor);
-                    ConsoleViewOut.addPerson(professor, true);
-                } else {
-                    ConsoleViewOut.addPerson(professor, false);
-                }
-                return;
+    public void addProfessor(long nationalCode) {
+        Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
+        if (professor == null) {
+            ConsoleViewOut.addProfessorFailed(nationalCode);
+        } else {
+            if (!CentralManagement.allActiveProfessors.contains(professor)) {
+                CentralLibrary.getInstance().addMember(professor);
+                ConsoleViewOut.addPerson(professor, true);
+            } else {
+                ConsoleViewOut.addPerson(professor, false);
             }
         }
-        ConsoleViewOut.addProfessorFailed(nationalCode);
     }
 
-    public void addEmployee(Long nationalCode, Libraries libraries) {
-        for (Employee employee : allEmployees) {
+    public void addEmployee(long nationalCode, Libraries libraries) {
+        for (Employee employee : CentralManagement.getAllEmployees()) {
             if (employee.getNationalCode() == nationalCode) {
                 if (CentralManagement.allActiveEmployees.contains(employee)) {
                     ConsoleViewOut.addPerson(employee, false);
                     return;
                 }
                 if (libraries == employee.getWorkPlace()) {
-                    CentralManagement.allActiveEmployees.add(employee);
                     if (employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
                         if (CentralLibrary.getInstance().getNumbersOfEmployee() < Library.NUMBERS_OF_EMPLOYEES) {
-                            CentralLibrary.getInstance().addMember(employee);
                             CentralLibrary.getInstance().addEmployee(employee);
                             ConsoleViewOut.addPerson(employee, true);
                         } else {
@@ -201,37 +191,40 @@ public class LibrariesController {
     }
 
     public void depositStudent(int studentId, long increase) {
-        for (Student student : allStudents) {
-            if (student.getStudentId() == studentId) {
-                student.addBudget(increase);
-                ConsoleViewOut.depositStudent(student);
-                return;
-            }
+        Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
+        if (student == null) {
+            ConsoleViewOut.depositFailed();
+        } else {
+            student.addBudget(increase);
+            ConsoleViewOut.depositStudent(student);
         }
-        ConsoleViewOut.depositFailed();
     }
 
     public void depositProfessor(long nationalCode, long increase) {
-        for (Professor professor : allProfessors) {
-            if (professor.getNationalCode() == nationalCode) {
-                professor.addBudget(increase);
-                ConsoleViewOut.depositProfessor(professor);
-                break;
+        Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
+        if (professor == null) {
+            ConsoleViewOut.depositFailed();
+        } else {
+            professor.addBudget(increase);
+            ConsoleViewOut.depositProfessor(professor);
+        }
+    }
+
+    public void setSchedule(long nationalCode, Libraries libraries, ArrayList<WeekDays> schedule) {
+        Employee employee = CentralManagement.getEmployeeByNCInAllEmployees(nationalCode);
+        if (employee == null) {
+            ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WORKER_NOT_EXIST);
+        } else {
+            if (employee.getWorkPlace() == libraries ||
+                    (libraries == Libraries.STORE && employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY)) {
+                employee.updateWorkingDays(schedule);
+                ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
+            } else {
+                ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WRONG_LIBRARY);
             }
         }
-        ConsoleViewOut.depositFailed();
     }
 
 
-    public ArrayList<Employee> getAllEmployees() {
-        return allEmployees;
-    }
 
-    public ArrayList<Professor> getAllProfessors() {
-        return allProfessors;
-    }
-
-    public ArrayList<Student> getAllStudents() {
-        return allStudents;
-    }
 }

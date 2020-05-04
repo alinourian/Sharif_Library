@@ -41,7 +41,7 @@ public class AtTheEnd {
         System.out.println();
         // STUDENTS
         System.out.println("\nAll existing students are: ");
-        for (Student student : LibrariesController.getInstance().getAllStudents()) {
+        for (Student student : CentralManagement.getAllStudents()) {
             System.out.println(student);
         }
         System.out.println("\nActive students are: ");
@@ -53,7 +53,7 @@ public class AtTheEnd {
         System.out.println();
         // PROFESSOR
         System.out.println("\nAll existing professors are: ");
-        for (Professor professor : LibrariesController.getInstance().getAllProfessors()) {
+        for (Professor professor : CentralManagement.getAllProfessors()) {
             System.out.println(professor);
         }
         System.out.println("\nActive professors are: ");
@@ -65,7 +65,7 @@ public class AtTheEnd {
         System.out.println();
         // EMPLOYEE
         System.out.println("\nAll existing employees are: ");
-        for (Employee employee : LibrariesController.getInstance().getAllEmployees()) {
+        for (Employee employee : CentralManagement.getAllEmployees()) {
             System.out.println(employee);
         }
         System.out.println("\nActive employees are: ");

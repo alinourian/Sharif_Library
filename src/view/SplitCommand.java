@@ -3,7 +3,9 @@ package view;
 import controller.*;
 import enums.Gender;
 import enums.Libraries;
+import enums.WeekDays;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public abstract class SplitCommand {
@@ -69,35 +71,14 @@ public abstract class SplitCommand {
         Matcher matcher = ConsoleCommands.CREATE_WORKER.getMatcher(command);
         if (matcher.find()) {
             Gender gender = setGender(matcher.group(4));
-            Libraries libraries;
-            if (matcher.group(5).equalsIgnoreCase("CentralLibrary") ||
-            matcher.group(5).equalsIgnoreCase("MainLibrary")) {
-                libraries = Libraries.CENTRAL_LIBRARY;
-            } else if (matcher.group(5).equalsIgnoreCase("LibraryA") ||
-                    matcher.group(5).equalsIgnoreCase("A")) {
-                libraries = Libraries.LIBRARY_A;
-            } else if (matcher.group(5).equalsIgnoreCase("LibraryB") ||
-                    matcher.group(5).equalsIgnoreCase("B")) {
-                libraries = Libraries.LIBRARY_B;
+            Libraries libraries = setLibrary(matcher.group(5));
+            if (libraries != null) {
+                controller.createWorker(matcher.group(1), Integer.parseInt(matcher.group(2)),
+                        Long.parseLong(matcher.group(3)), gender, libraries);
             } else {
                 System.err.println("Sorry! We can't create worker. Library is not found!");
-                return;
             }
-            controller.createWorker(matcher.group(1), Integer.parseInt(matcher.group(2)),
-                    Long.parseLong(matcher.group(3)), gender, libraries);
         }
-    }
-
-    private static Gender setGender (String string) {
-        Gender gender;
-        if (string.equalsIgnoreCase("male") ||
-                string.equalsIgnoreCase("m"))
-            gender = Gender.MALE;
-        else if (string.equalsIgnoreCase("female") ||
-                string.equalsIgnoreCase("f"))
-            gender = Gender.FEMALE;
-        else gender = Gender.NON;
-        return gender;
     }
 
     public static void depositStudent(String command) {
@@ -133,24 +114,80 @@ public abstract class SplitCommand {
     public static void addEmployee(String command) {
         Matcher matcher = ConsoleCommands.ADD_WORKER.getMatcher(command);
         if (matcher.find()) {
-            String libraryName = matcher.group(2);
-            Libraries libraries;
-            if (libraryName.equalsIgnoreCase("mainLibrary") ||
-                    libraryName.equalsIgnoreCase("centralLibrary")) {
-                libraries = Libraries.CENTRAL_LIBRARY;
-            } else if (libraryName.equalsIgnoreCase("libraryA") ||
-                    libraryName.equalsIgnoreCase("A")) {
-                libraries = Libraries.LIBRARY_A;
-            } else if (libraryName.equalsIgnoreCase("libraryB") ||
-                    libraryName.equalsIgnoreCase("B")) {
-                libraries = Libraries.LIBRARY_B;
+            Libraries libraries = setLibrary(matcher.group(2));
+            if (libraries != null) {
+                controller.addEmployee(Long.parseLong(matcher.group(1)), libraries);
             } else {
                 System.err.println("Sorry! We can't create worker. Library is not found!");
-                return;
             }
-            controller.addEmployee(Long.parseLong(matcher.group(1)), libraries);
+        }
+    }
+
+    public static void setSchedule(String command) {
+        Matcher matcher = ConsoleCommands.SET_SCHEDULE.getMatcher(command);
+        if (matcher.find()) {
+            ArrayList<WeekDays> schedule = new ArrayList<>();
+            long nationalCode = Integer.parseInt(matcher.group(1));
+            Libraries libraries = setLibrary(matcher.group(2));
+            if (libraries != null) {
+                for (int i = 0; i < 6; i++) {
+                    setDaysInSchedule(schedule, i+1, Integer.parseInt(matcher.group(i + 3)) != 0);
+                }
+                controller.setSchedule(nationalCode, libraries, schedule);
+            } else {
+                System.err.println("Sorry! We can't create worker. Library is not found!");
+            }
         }
     }
 
 
+
+    private static void setDaysInSchedule(ArrayList<WeekDays> schedule, int i, boolean bool) {
+        if (bool) {
+            if (i == 1) {
+                schedule.add(WeekDays.SATURDAY);
+            } else  if (i == 2) {
+                schedule.add(WeekDays.SUNDAY);
+            } else  if (i == 3) {
+                schedule.add(WeekDays.MONDAY);
+            } else  if (i == 4) {
+                schedule.add(WeekDays.TUESDAY);
+            } else  if (i == 5) {
+                schedule.add(WeekDays.WEDNESDAY);
+            } else  if (i == 6) {
+                schedule.add(WeekDays.THURSDAY);
+            }
+        }
+    }
+
+    private static Gender setGender(String string) {
+        Gender gender;
+        if (string.equalsIgnoreCase("male") ||
+                string.equalsIgnoreCase("m"))
+            gender = Gender.MALE;
+        else if (string.equalsIgnoreCase("female") ||
+                string.equalsIgnoreCase("f"))
+            gender = Gender.FEMALE;
+        else gender = Gender.NON;
+        return gender;
+    }
+
+    private static Libraries setLibrary(String string) {
+        Libraries libraries;
+        if (string.equalsIgnoreCase("mainLibrary") ||
+                string.equalsIgnoreCase("centralLibrary")) {
+            libraries = Libraries.CENTRAL_LIBRARY;
+        } else if (string.equalsIgnoreCase("libraryA") ||
+                string.equalsIgnoreCase("A")) {
+            libraries = Libraries.LIBRARY_A;
+        } else if (string.equalsIgnoreCase("libraryB") ||
+                string.equalsIgnoreCase("B")) {
+            libraries = Libraries.LIBRARY_B;
+        } else if (string.equalsIgnoreCase("store")) {
+            libraries = Libraries.STORE;
+        } else {
+            return null;
+        }
+        return libraries;
+    }
 }

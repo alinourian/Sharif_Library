@@ -3,9 +3,11 @@ package main;
 import view.*;
 
 public class Main {
+
     public static void main(String[] args) {
         ConsoleViewIn.start();
         AtTheEnd.run();
+
         /*
         String command = "  1932  /5/   4";
         String[] help = command.split("/");

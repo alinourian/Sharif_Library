@@ -8,8 +8,8 @@ import enums.WeekDays;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Employee extends Person{
-    private Libraries workPlace;
+public class Employee extends Person {
+    private final Libraries workPlace;
     private List<WeekDays> workingDays;
 
     public Employee(String fullName, int age,
@@ -27,7 +27,7 @@ public class Employee extends Person{
         return workingDays;
     }
 
-    void updateWorkingDays(List<WeekDays> newSchedule) {
+    public void updateWorkingDays(List<WeekDays> newSchedule) {
         workingDays = newSchedule;
     }
 

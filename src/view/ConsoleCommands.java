@@ -20,8 +20,8 @@ public enum ConsoleCommands {
     ADD_STUDENT("(?i)\\s*add\\s+person\\s+student\\s+(\\d+)\\s*"),//9
     ADD_PROFESSOR("(?i)\\s*add\\s+person\\s+professor\\s+(\\d+)\\s*"),//10
     ADD_WORKER("(?i)\\s*add\\s+worker\\s+(\\d+)\\s+(\\w+)\\s*"),//11
-    SET_SCHEDULE("(?i)\\s*set\\s+schedule\\s+(\\w+)\\s+(\\w+)" +//12
-            "(\\d\\s+\\d\\s+\\d\\s+\\d\\s+\\d\\s+\\d)\\s*"),//12
+    SET_SCHEDULE("(?i)\\s*set\\s+schedule\\s+(\\d+)\\s+(\\w+)" +//12
+            "(0|1)\\s+(0|1)\\s+(0|1)\\s+(0|1)\\s+(0|1)\\s+(0|1)\\s*"),//12
     FIND_BOOK("(?i)\\s*find\\s+book\\s+(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*" +//13
             "(\\w+)\\s+(\\w+)\\s+(\\w+)\\s*"),//13
     LOAN_BOOK("(?i)\\s*loan\\s+book\\s+(\\w+\\s+\\w+\\s+(\\w+\\s+)?)(\\w+)" +//14
