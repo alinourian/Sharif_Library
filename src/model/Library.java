@@ -9,7 +9,7 @@ public interface Library {
     static final int NUMBERS_OF_EMPLOYEES = 15;
     static final int AREA = 500;
     static final int NUMBERS_OF_ROOMS = 8;
-    static final int  MAX_BOOKS = 5;
+    static final int  MAX_BOOKS = 30;
 
     AddBook addBook(Book book);
     boolean borrowBook(Book book);

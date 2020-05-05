@@ -1,10 +1,12 @@
 package main;
 
+import controller.SaveDate;
 import view.*;
 
 public class Main {
 
     public static void main(String[] args) {
+        SaveDate.startProgram();
         ConsoleViewIn.start();
         AtTheEnd.run();
 

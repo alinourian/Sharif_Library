@@ -25,14 +25,14 @@ public abstract class ConsoleViewOut {
         } else if (status == AddBook.NEW_ADDED_SUCCESSFULLY) {
             System.out.println("You just successfully added a new book to this library.");
         } else if (status == AddBook.LIBRARY_IS_FULL) {
-            System.out.println("Sorry! The library is full! You can't add your book.");
+            System.err.println("Sorry! The library is full! You can't add your book.");
         } else if (status == AddBook.NO_OTHER_BOOK_TO_ADD) {
-            System.out.println("No book to add! Please create one another first.");
+            System.err.println("No book to add! Please create one another first.");
         } else if (status == AddBook.BELONG_TO_ANOTHER_LIBRARY) {
-            System.out.println("This book was added to another library, it belongs to that!" +
+            System.err.println("This book was added to another library, it belongs to that!" +
                     " You can't add it to this library.");
         } else if (status == AddBook.BOOK_NEVER_EXIST) {
-            System.out.println("This book does not exist! Please create your new book first.");
+            System.err.println("This book does not exist! Please create your new book first.");
         } else if (status == AddBook.LIBRARY_NEVER_EXIST) {
             System.err.println("The library you're looking for does not exist! please choose one of these: ");
             System.out.println("1. CentralLibrary Or MainLibrary\n" +
@@ -98,30 +98,30 @@ public abstract class ConsoleViewOut {
     }
 
     public static void addStudentFailed(int studentId) {
-        System.out.println("Student with studentID \"" + studentId + "\" does not exist!");
+        System.err.println("Student with studentID \"" + studentId + "\" does not exist!");
     }
 
     public static void addProfessorFailed(long nationalCode) {
-        System.out.println("Professor with national-code \"" + nationalCode + "\" does not exist!");
+        System.err.println("Professor with national-code \"" + nationalCode + "\" does not exist!");
     }
 
     public static void addEmployeeFailed(long nationalCode, AddWorker status) {
         if (status == AddWorker.INVALID_NC) {
-            System.out.println("Worker with national-code \"" + nationalCode + "\" does not exist!");
+            System.err.println("Worker with national-code \"" + nationalCode + "\" does not exist!");
         } else if (status == AddWorker.LIBRARY_IS_FULL) {
-            System.out.println("Sorry! Library capacity for workers is full!\nCan not add worker to this library.");
+            System.err.println("Sorry! Library capacity for workers is full!\nCan not add worker to this library.");
         } else if (status == AddWorker.WRONG_LIBRARY_TO_ADD) {
-            System.out.println("Sorry! Can not add this worker to this library!\n" +
+            System.err.println("Sorry! Can not add this worker to this library!\n" +
                     "Worker with national-code \"" + nationalCode + "\" is not for this library");
         }
     }
 
     public static void setSchedule(long nationalCode, SetSchedule status) {
         if (status == SetSchedule.WORKER_NOT_EXIST) {
-            System.out.println("Sorry! Worker with national-code \"" + nationalCode +
+            System.err.println("Sorry! Worker with national-code \"" + nationalCode +
                     "\" is not exist.");
         } else if (status == SetSchedule.WRONG_LIBRARY) {
-            System.out.println("Sorry! The worker with national-code \"" + nationalCode +
+            System.err.println("Sorry! The worker with national-code \"" + nationalCode +
                     "\" belongs to another library.\nPlease enter the correct library.");
         } else if (status == SetSchedule.SUCCESSFUL) {
             System.out.println("The schedule of worker with national-code \"" + nationalCode +

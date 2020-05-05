@@ -1,6 +1,5 @@
 package main;
 
-import controller.LibrariesController;
 import model.*;
 
 public class AtTheEnd {
