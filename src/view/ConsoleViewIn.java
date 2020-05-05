@@ -1,5 +1,6 @@
 package view;
 
+import controller.SaveDate;
 import main.AtTheEnd;
 
 import java.util.Scanner;
@@ -76,6 +77,7 @@ public abstract class ConsoleViewIn {
             } else {//21
                 System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
             }
+            SaveDate.addToFile(command);
         }
         System.out.println("Program has finished! Good luck;)");
     }

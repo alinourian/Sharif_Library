@@ -5,11 +5,17 @@ import view.SplitCommand;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public abstract class SaveDate {
-    public static void startProgram() {
+    private static File getFile() {
         File file = new File("D:\\sharif\\ترم 2\\Object Orient Programing java term2\\تمرین ها\\3\\library.txt");
+        return file;
+    }
+    public static void UploadFile() {
+        File file = getFile();
         try {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
@@ -75,5 +81,18 @@ public abstract class SaveDate {
         } else {//21
             System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
         }
+    }
+
+    public static void addToFile(String command){
+        try {
+            FileWriter fileWriter = new FileWriter(getFile());
+            fileWriter.write(command + "\n");
+            fileWriter.close();
+        } catch (FileNotFoundException e){
+            System.err.println("File not found!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
