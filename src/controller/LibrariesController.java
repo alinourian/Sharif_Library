@@ -22,7 +22,7 @@ public class LibrariesController {
     }
 
     private LibrariesController() {
-
+        startDate = new MyDate();
     }
 
     public void setDate(int year, int month, int day) {

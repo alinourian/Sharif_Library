@@ -14,6 +14,9 @@ public class MyDate {
         this.day = day;
     }
 
+    public MyDate() {
+    }
+
     public void setDate(int year, int month, int day) {
         this.year = year;
         this.month = month;
