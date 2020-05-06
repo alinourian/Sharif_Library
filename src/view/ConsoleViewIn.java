@@ -17,7 +17,7 @@ public abstract class ConsoleViewIn {
                 System.out.println("21-Date has been set!\n");
                 break;
             }
-            System.out.println("INVALID COMMAND! PLEASE TRY AGAIN!");
+            System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
         }
         while (true) {
             String command = scanner.nextLine();
@@ -56,7 +56,8 @@ public abstract class ConsoleViewIn {
                 SplitCommand.depositStudent(command);
                 System.out.println("\n");
             } else if (ConsoleCommands.FIND_BOOK.getMatcher(command).matches()) {//13
-                System.out.println(13);
+                SplitCommand.findBook(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.GIVE_BACK_BOOK.getMatcher(command).matches()) {//14
                 System.out.println(14);
             } else if (ConsoleCommands.GIVE_BACK_TO_STORE.getMatcher(command).matches()) {//15
@@ -77,7 +78,6 @@ public abstract class ConsoleViewIn {
             } else {//21
                 System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
             }
-            SaveDate.addToFile(command);
         }
         System.out.println("Program has finished! Good luck;)");
     }

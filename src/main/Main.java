@@ -3,13 +3,17 @@ package main;
 import controller.SaveDate;
 import view.*;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class Main {
 
     public static void main(String[] args) {
-        SaveDate.UploadFile();
-        ConsoleViewIn.start();
-        AtTheEnd.run();
-
+        //SaveDate.UploadFile();
+        //ConsoleViewIn.start();
+        //AtTheEnd.run();
+        Date date = new Date();
+        System.out.println(date);
         /*
         String command = "  1932  /5/   4";
         String[] help = command.split("/");

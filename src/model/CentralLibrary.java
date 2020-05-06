@@ -50,7 +50,7 @@ public class CentralLibrary implements Library {
         if (numbersOfBooks == MAX_BOOKS) {
             return AddBook.LIBRARY_IS_FULL;
         }
-        Book test = CentralManagement.searchBook(book);
+        Book test = CentralManagement.searchBookInAllBooks(book);
         if (test == null) {
             return AddBook.BOOK_NEVER_EXIST;//This book dose not ever exist!
         } else if (test.getBookPlace() == Libraries.NO_WHERE_YET) {

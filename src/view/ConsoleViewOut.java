@@ -19,7 +19,7 @@ public abstract class ConsoleViewOut {
 
     public static void addBook(AddBook status, Book book) {
         if (status == AddBook.ADDED_SUCCESSFULLY) {
-            Book test = CentralManagement.searchBook(book);
+            Book test = CentralManagement.searchBookInAllBooks(book);
             System.out.println("You just successfully added one book to this library.");
             System.out.println("available: " + test.getNumbersAvailable());
         } else if (status == AddBook.NEW_ADDED_SUCCESSFULLY) {
@@ -126,6 +126,19 @@ public abstract class ConsoleViewOut {
         } else if (status == SetSchedule.SUCCESSFUL) {
             System.out.println("The schedule of worker with national-code \"" + nationalCode +
                     "\" has been changed.");
+        }
+    }
+
+    public static void findBookSuccessful(Book book) {
+        System.out.println("Well, You can find this book at \"" + book.getBookPlace() + "\".");
+    }
+
+    public static void findBookFailed(boolean bool) {
+        if (bool) {
+        System.err.println("Sorry! This book is not does not exist in any library!");
+        } else {
+            System.err.println("Sorry! Person with this Id is not a member of Central-Library." +
+                    "\nplease register to first.");
         }
     }
 

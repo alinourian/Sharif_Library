@@ -19,8 +19,8 @@ public abstract class CentralManagement {
     public static Map<Book, String> allBorrowedBooks = new HashMap<>();//just been used in controller
     public static Map<Book, String> allReturnedBooks = new HashMap<>();//just been used in controller
 
-    public static Book searchBook(Book book) {
-        for(Book test : CentralManagement.allBooksEverExist) {
+    public static Book searchBookInAllBooks(Book book) {
+        for(Book test : allBooksEverExist) {
             if(test.getISBN() == book.getISBN())  {
                 if(test.getPublishedYear() == book.getPublishedYear()
                         && test.getBookName().equals(book.getBookName())) {
@@ -31,6 +31,17 @@ public abstract class CentralManagement {
         return null;
     }
 
+    public static Book searchBookInLibraries(Book book) {
+        for(Book test : allBooksInLibraries.keySet()) {
+            if(test.getISBN() == book.getISBN())  {
+                if(test.getPublishedYear() == book.getPublishedYear()
+                        && test.getBookName().equals(book.getBookName())) {
+                    return test;
+                }
+            }
+        }
+        return null;
+    }
 
     public static Student getStudentByStudentIdInAllStudents(int studentId) {
         for (Student student : allStudents) {
@@ -74,6 +85,14 @@ public abstract class CentralManagement {
                 return employee;
             }
         }
+        return null;
+    }
+
+    public static void refreshWorkersSchedule() {
+
+    }
+
+    public static Employee getWorkerByTime() {
         return null;
     }
 

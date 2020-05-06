@@ -3,19 +3,13 @@ package controller;
 import view.ConsoleCommands;
 import view.SplitCommand;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public abstract class SaveDate {
-    private static File getFile() {
-        File file = new File("D:\\sharif\\ترم 2\\Object Orient Programing java term2\\تمرین ها\\3\\library.txt");
-        return file;
-    }
+    private static final File file = new File("D:\\sharif\\ترم 2\\Object Orient Programing java term2\\تمرین ها\\3\\library.txt");
+
     public static void UploadFile() {
-        File file = getFile();
         try {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
@@ -28,6 +22,7 @@ public abstract class SaveDate {
         }
         System.out.println("Upload saves finished!");
     }
+
     private static void run(String command) {
         if (ConsoleCommands.ADD_BOOK_TO_LIBRARY.getMatcher(command).matches()) {//2
             SplitCommand.addBookToLibrary(command);
@@ -83,16 +78,20 @@ public abstract class SaveDate {
         }
     }
 
-    public static void addToFile(String command){
+    public static void addToFile(String command) {
         try {
-            FileWriter fileWriter = new FileWriter(getFile());
-            fileWriter.write(command + "\n");
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.newLine();
+            bufferedWriter.write(command);
+            bufferedWriter.close();
             fileWriter.close();
-        } catch (FileNotFoundException e){
-            System.err.println("File not found!");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public static File getFile() {
+        return file;
     }
 }

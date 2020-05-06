@@ -37,7 +37,7 @@ public class LibrariesController {
                            String writer, String language, long ISBN, double price) {
         Book book;
         book = new Book(bookName, pages, publishedYear, writer, language, ISBN, price);
-        Book test = CentralManagement.searchBook(book);
+        Book test = CentralManagement.searchBookInAllBooks(book);
         if (test == null) {
             CentralManagement.allBooksEverExist.add(book);
             book.setNumbersAvailable(1);
@@ -51,7 +51,7 @@ public class LibrariesController {
                            String language, long ISBN, double price, String translator) {
         Book book;
         book = new Book(bookName, pages, publishedYear, writer, language, ISBN, price, translator);
-        Book test = CentralManagement.searchBook(book);
+        Book test = CentralManagement.searchBookInAllBooks(book);
         if (test == null) {
             CentralManagement.allBooksEverExist.add(book);
             book.setNumbersAvailable(1);
@@ -221,6 +221,34 @@ public class LibrariesController {
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else {
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WRONG_LIBRARY);
+            }
+        }
+    }
+
+    public void findBook(int studentId, String bookName, long ISBN, int publishedYear) {
+        if (CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId) == null) {
+            ConsoleViewOut.findBookFailed(false);
+        } else {
+            Book test = new Book(bookName, ISBN, publishedYear);
+            Book book = CentralManagement.searchBookInLibraries(test);
+            if (book == null) {
+                ConsoleViewOut.findBookFailed(true);
+            } else {
+                ConsoleViewOut.findBookSuccessful(book);
+            }
+        }
+    }
+
+    public void findBook(long nationalCode, String bookName, long ISBN, int publishedYear) {
+        if (CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode) == null) {
+            ConsoleViewOut.findBookFailed(false);
+        } else {
+            Book test = new Book(bookName, ISBN, publishedYear);
+            Book book = CentralManagement.searchBookInLibraries(test);
+            if (book == null) {
+                ConsoleViewOut.findBookFailed(true);
+            } else {
+                ConsoleViewOut.findBookSuccessful(book);
             }
         }
     }

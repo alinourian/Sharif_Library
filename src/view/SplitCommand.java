@@ -140,7 +140,20 @@ public abstract class SplitCommand {
         }
     }
 
-
+    public static void findBook(String command) {
+        Matcher matcher = ConsoleCommands.FIND_BOOK.getMatcher(command);
+        if (matcher.find()) {
+            if (matcher.group(4).equalsIgnoreCase("student")) {
+                controller.findBook(Integer.parseInt(matcher.group(5)), matcher.group(1),
+                        Long.parseLong(matcher.group(2)), Integer.parseInt(matcher.group(3)));
+            } else if (matcher.group(4).equalsIgnoreCase("professor")) {
+                controller.findBook(Long.parseLong(matcher.group(5)), matcher.group(1),
+                        Long.parseLong(matcher.group(2)), Integer.parseInt(matcher.group(3)));
+            } else {
+                ConsoleViewOut.invalidCommands();
+            }
+        }
+    }
 
     private static void setDaysInSchedule(ArrayList<WeekDays> schedule, int i, boolean bool) {
         if (bool) {
