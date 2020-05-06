@@ -24,8 +24,9 @@ public enum ConsoleCommands {
             "(0|1)\\s+(0|1)\\s+(0|1)\\s+(0|1)\\s+(0|1)\\s+(0|1)\\s*"),//12
     FIND_BOOK("(?i)\\s*find\\s+book\\s+(\\w+)\\s*,\\s*(\\d+)\\s*,\\s*" +//13
             "(\\d+)\\s+(\\w+)\\s+(\\d+)\\s*"),//13
-    LOAN_BOOK("(?i)\\s*loan\\s+book\\s+(\\w+\\s+\\w+\\s+(\\w+\\s+)?)(\\w+)" +//14
-            "\\s*,\\s*(\\w+)\\s+(\\w+)\\s+(\\w+)\\s+(\\w+)\\s+(\\w+\\s*:\\s*\\w+)\\s+(\\d+\\/\\d+\\/\\d+)\\s*"),//14
+    LOAN_BOOK("(?i)\\s*loan\\s+book\\s+(\\w+)\\s*,\\s*(\\w+)(\\s*,\\s*(\\w+))?\\s+" +
+            "(CentralLibrary|MainLibrary|LibraryA|A|LibraryB|B)\\s+(student|professor)\\s+(\\d+)\\s+" +//14
+            "(\\w+\\s*:\\s*\\w+)\\s+(\\d+\\/\\d+\\/\\d+)\\s*"),//14
     GIVE_BACK_BOOK("(?i)\\s*giveback\\s+book\\s+(\\w+\\s+\\w+\\s+(\\w+\\s+)?)" +//15
             "(\\w+)\\s+(\\w+)\\s+(\\w+)\\s+(\\d+\\/\\d+\\/\\d+)\\s*"),//15
     NEXT_DAY("(?i)\\s*next\\s+day(\\s+\\w+)?\\s*"),//16

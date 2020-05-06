@@ -155,6 +155,63 @@ public abstract class SplitCommand {
         }
     }
 
+    public static void loanBook(String command) {
+        Matcher matcher = ConsoleCommands.LOAN_BOOK.getMatcher(command);
+        if (matcher.find()) {
+            MyTime loanTime = setTime(matcher.group(8));
+            MyDate giveBackDate = setDay(matcher.group(9));
+            if (matcher.group(5).equalsIgnoreCase("mainLibrary") ||
+            matcher.group(5).equalsIgnoreCase("centralLibrary")) {
+                if (matcher.group(7).equalsIgnoreCase("student")) {
+                    controller.loanBook(Long.parseLong(matcher.group(1)), Integer.parseInt(matcher.group(2)),
+                            Libraries.CENTRAL_LIBRARY, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
+                } else {
+                    controller.loanBook(Long.parseLong(matcher.group(1)), Integer.parseInt(matcher.group(2)),
+                            Libraries.CENTRAL_LIBRARY, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                }
+            } else if (matcher.group(5).equalsIgnoreCase("LibraryA") ||
+                    matcher.group(5).equalsIgnoreCase("A")) {
+                if (matcher.group(7).equalsIgnoreCase("student")) {
+                    controller.loanBook(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3),
+                            Libraries.LIBRARY_A, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
+                } else {
+                    controller.loanBook(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3),
+                            Libraries.LIBRARY_A, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                }
+            } else if (matcher.group(5).equalsIgnoreCase("LibraryB") ||
+                    matcher.group(5).equalsIgnoreCase("B")) {
+                if (matcher.group(7).equalsIgnoreCase("student")) {
+                    controller.loanBook(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3),
+                            Libraries.LIBRARY_B, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
+                } else {
+                    controller.loanBook(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3),
+                            Libraries.LIBRARY_B, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                }
+            }
+        }
+    }
+
+    private static MyTime setTime(String time) {
+        MyTime myTime;
+        int min;
+        int hour;
+        int mid = time.indexOf(':');
+        hour = Integer.parseInt(time.substring(0, mid).trim());
+        min = Integer.parseInt(time.substring(mid + 1).trim());
+        myTime = new MyTime(hour, min);
+        return myTime;
+    }
+
+    private static MyDate setDay(String time) {
+        MyDate myDate;
+        String[] help = time.split("/");
+        int year = Integer.parseInt(help[0].trim());
+        int month = Integer.parseInt(help[1].trim());
+        int day = Integer.parseInt(help[2].trim());
+        myDate = new MyDate(year, month, day);
+        return myDate;
+    }
+
     private static void setDaysInSchedule(ArrayList<WeekDays> schedule, int i, boolean bool) {
         if (bool) {
             if (i == 1) {

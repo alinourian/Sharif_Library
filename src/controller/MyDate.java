@@ -1,25 +1,20 @@
 package controller;
 
 
-public class Time {
-    private static Time instance;
-
-    private Time() {
-
-    }
-
-    public static Time getInstance() {
-        if(instance == null) {
-            instance = new Time();
-        }
-        return instance;
-    }
+public class MyDate {
+    private static MyDate instance;
 
     private int year;
     private int month;
     private int day;
 
-    public void setTime(int year, int month, int day) {
+    public MyDate(int year, int month, int day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
+    public void setDate(int year, int month, int day) {
         this.year = year;
         this.month = month;
         this.day = day;

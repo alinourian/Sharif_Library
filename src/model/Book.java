@@ -55,6 +55,18 @@ public class Book {
         this.publishedYear = publishedYear;
     }
 
+    public Book(long ISBN, int publishedYear) {
+        this.ISBN = ISBN;
+        this.publishedYear = publishedYear;
+    }
+
+    public Book(String Name, int publishedYear, String translatorName) {//just for help!!
+        this.bookName = Name;
+        this.writer = Name;
+        this.publishedYear = publishedYear;
+        this.translatorName = translatorName;
+    }
+
     public int getPublishedYear() {
         return publishedYear;
     }

@@ -21,7 +21,13 @@ public abstract class ConsoleViewOut {
         if (status == AddBook.ADDED_SUCCESSFULLY) {
             Book test = CentralManagement.searchBookInAllBooks(book);
             System.out.println("You just successfully added one book to this library.");
-            System.out.println("available: " + test.getNumbersAvailable());
+            if (test == null) {
+                System.err.println("An error happened in program!" +
+                        "-View\\ConsoleViewOut\\addBook\\25-test-must-never-be-null");
+                System.out.println("Sorry! try again");
+            } else {
+                System.out.println("available: " + test.getNumbersAvailable());
+            }
         } else if (status == AddBook.NEW_ADDED_SUCCESSFULLY) {
             System.out.println("You just successfully added a new book to this library.");
         } else if (status == AddBook.LIBRARY_IS_FULL) {
@@ -135,12 +141,28 @@ public abstract class ConsoleViewOut {
 
     public static void findBookFailed(boolean bool) {
         if (bool) {
-        System.err.println("Sorry! This book is not does not exist in any library!");
+        System.err.println("Sorry! This book does not exist in any library!");
         } else {
             System.err.println("Sorry! Person with this Id is not a member of Central-Library." +
                     "\nplease register to first.");
         }
     }
+
+    public static void loanBookFailed(LoanBook loanBook) {
+        if (loanBook == LoanBook.DETAILS_NOT_MATCH) {
+            System.err.println("Book details for finding the book is not match to this library search system!");
+            System.out.println("Use this format:\nMainLibrary : ISBN, PublishedYear");
+            System.out.println("LibraryA : BookName, PublishedYear, Translator*");
+            System.out.println("LibraryB : Writer, PublishedYear, Translator*");
+        } else if (loanBook == LoanBook.BOOK_NOT_FIND) {
+            System.err.println("Sorry! This book does not exist in this library!");
+        } else if (loanBook == LoanBook.PERSON_NOT_MEMBER) {
+            System.err.println("Sorry! Person with this Id is not a member of Central-Library." +
+                    "\nplease register to first.");
+        }
+    }
+
+
 
     public static void invalidCommands() {
         System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
