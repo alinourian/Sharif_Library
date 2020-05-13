@@ -1,5 +1,6 @@
 package view;
 
+import controller.MyDate;
 import enums.*;
 import model.*;
 
@@ -150,7 +151,7 @@ public abstract class ConsoleViewOut {
 
     public static void loanBookFailed(LoanBook loanBook) {
         if (loanBook == LoanBook.DETAILS_NOT_MATCH) {
-            System.err.println("Book details for finding the book is not match to this library search system!");
+            System.err.println("Book details for finding the book do not match to this library search system!");
             System.out.println("Use this format:\nMainLibrary : ISBN, PublishedYear");
             System.out.println("LibraryA : BookName, PublishedYear, Translator*");
             System.out.println("LibraryB : Writer, PublishedYear, Translator*");
@@ -159,10 +160,47 @@ public abstract class ConsoleViewOut {
         } else if (loanBook == LoanBook.PERSON_NOT_MEMBER) {
             System.err.println("Sorry! Person with this Id is not a member of Central-Library." +
                     "\nplease register to first.");
+        } else if (loanBook == LoanBook.BOOK_NOT_AVAILABLE) {
+            System.err.println("Sorry! The library does not have any of this book now.");
+        } else if (loanBook == LoanBook.DATE_PASSED) {
+            System.err.println("Give back date has passed!!! Enter a day in future!");
+        } else if (loanBook == LoanBook.LIBRARY_IS_CLOSED) {
+            System.err.println("Sorry! Today is friday! Library is closed.");
+        } else if (loanBook == LoanBook.BUDGET_NOT_ENOUGH) {
+            System.err.println("Sorry! The Budget is not enough to loan book!");
+        } else if (loanBook == LoanBook.BORROW_THE_SAME_BOOK) {
+            System.err.println("Sorry! You have been already loaned one of this book and do not have gave it back!");
+            System.err.println("The library can not loan you another one.");
         }
     }
 
+    public static void loanBook() {
+        System.out.println("Loan book successfully.");
+    }
 
+    public static void giveBackBook(GiveBackBook giveBackBook) {
+        if (giveBackBook == GiveBackBook.PERSON_NOT_MEMBER) {
+            System.err.println("The person is not a member of library!");
+        } else if (giveBackBook == GiveBackBook.BOOK_NOT_LOAN) {
+            System.err.println("This book have been never loaned:/");
+        } else if (giveBackBook == GiveBackBook.DETAILS_NOT_MATCH) {
+            System.err.println("Book details do not match to this library search system!");
+            System.out.println("Use this format:\nMainLibrary : ISBN, PublishedYear");
+            System.out.println("LibraryA : BookName, PublishedYear, Translator*");
+            System.out.println("LibraryB : Writer, PublishedYear, Translator*");
+        } else if (giveBackBook == GiveBackBook.LIBRARY_NOT_EXIST) {
+            System.err.println("The library you entered does not ever exist!");
+        } else if (giveBackBook == GiveBackBook.BOOK_FOR_SOMEONE_ELSE) {
+            System.err.println("This book were loan to another person! How do you have it?!-_-");
+        } else if (giveBackBook == GiveBackBook.SUCCESSFUL) {
+            System.out.println("You successfully gave back this book.");
+        }
+    }
+
+    public static void goNextDay(MyDate date) {
+        System.out.println("Time changed.");
+        System.out.println("Today date is " + date);
+    }
 
     public static void invalidCommands() {
         System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");

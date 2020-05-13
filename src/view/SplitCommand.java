@@ -1,9 +1,8 @@
 package view;
 
 import controller.*;
-import enums.Gender;
-import enums.Libraries;
-import enums.WeekDays;
+import enums.*;
+import model.Book;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -144,10 +143,10 @@ public abstract class SplitCommand {
         Matcher matcher = ConsoleCommands.FIND_BOOK.getMatcher(command);
         if (matcher.find()) {
             if (matcher.group(4).equalsIgnoreCase("student")) {
-                controller.findBook(Integer.parseInt(matcher.group(5)), matcher.group(1),
+                controller.findBookForStudent(Integer.parseInt(matcher.group(5)), matcher.group(1),
                         Long.parseLong(matcher.group(2)), Integer.parseInt(matcher.group(3)));
             } else if (matcher.group(4).equalsIgnoreCase("professor")) {
-                controller.findBook(Long.parseLong(matcher.group(5)), matcher.group(1),
+                controller.findBookForProfessors(Long.parseLong(matcher.group(5)), matcher.group(1),
                         Long.parseLong(matcher.group(2)), Integer.parseInt(matcher.group(3)));
             } else {
                 ConsoleViewOut.invalidCommands();
@@ -160,34 +159,96 @@ public abstract class SplitCommand {
         if (matcher.find()) {
             MyTime loanTime = setTime(matcher.group(8));
             MyDate giveBackDate = setDay(matcher.group(9));
-            if (matcher.group(5).equalsIgnoreCase("mainLibrary") ||
-            matcher.group(5).equalsIgnoreCase("centralLibrary")) {
-                if (matcher.group(7).equalsIgnoreCase("student")) {
-                    controller.loanBook(Long.parseLong(matcher.group(1)), Integer.parseInt(matcher.group(2)),
-                            Libraries.CENTRAL_LIBRARY, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
-                } else {
-                    controller.loanBook(Long.parseLong(matcher.group(1)), Integer.parseInt(matcher.group(2)),
-                            Libraries.CENTRAL_LIBRARY, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+            try {
+                if (matcher.group(5).equalsIgnoreCase("mainLibrary") ||
+                        matcher.group(5).equalsIgnoreCase("centralLibrary")) {
+                    if (matcher.group(6).equalsIgnoreCase("student")) {
+                        controller.loanBookInCentralLibraryForStudent(Long.parseLong(matcher.group(1)),
+                                Integer.parseInt(matcher.group(2)), Libraries.CENTRAL_LIBRARY,
+                                Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
+                    } else {
+                        controller.loanBookInCentralLibraryForProfessor(Long.parseLong(matcher.group(1)),
+                                Integer.parseInt(matcher.group(2)), Libraries.CENTRAL_LIBRARY,
+                                Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                    }
+                } else if (matcher.group(5).equalsIgnoreCase("LibraryA") ||
+                        matcher.group(5).equalsIgnoreCase("A")) {
+                    if (matcher.group(6).equalsIgnoreCase("student")) {
+                        controller.loanBookInLibrary_A_B_ForStudent(matcher.group(1),
+                                Integer.parseInt(matcher.group(2)), matcher.group(3),
+                                Libraries.LIBRARY_A, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
+                    } else {
+                        controller.loanBookInLibrary_A_B_ForProfessor(matcher.group(1),
+                                Integer.parseInt(matcher.group(2)), matcher.group(3),
+                                Libraries.LIBRARY_A, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                    }
+                } else if (matcher.group(5).equalsIgnoreCase("LibraryB") ||
+                        matcher.group(5).equalsIgnoreCase("B")) {
+                    if (matcher.group(6).equalsIgnoreCase("student")) {
+                        controller.loanBookInLibrary_A_B_ForStudent(matcher.group(1),
+                                Integer.parseInt(matcher.group(2)), matcher.group(3),
+                                Libraries.LIBRARY_B, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
+                    } else {
+                        controller.loanBookInLibrary_A_B_ForProfessor(matcher.group(1),
+                                Integer.parseInt(matcher.group(2)), matcher.group(3),
+                                Libraries.LIBRARY_B, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                    }
                 }
-            } else if (matcher.group(5).equalsIgnoreCase("LibraryA") ||
-                    matcher.group(5).equalsIgnoreCase("A")) {
-                if (matcher.group(7).equalsIgnoreCase("student")) {
-                    controller.loanBook(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3),
-                            Libraries.LIBRARY_A, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
-                } else {
-                    controller.loanBook(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3),
-                            Libraries.LIBRARY_A, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
-                }
-            } else if (matcher.group(5).equalsIgnoreCase("LibraryB") ||
-                    matcher.group(5).equalsIgnoreCase("B")) {
-                if (matcher.group(7).equalsIgnoreCase("student")) {
-                    controller.loanBook(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3),
-                            Libraries.LIBRARY_B, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
-                } else {
-                    controller.loanBook(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3),
-                            Libraries.LIBRARY_B, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
-                }
+            } catch (NumberFormatException e) {
+                ConsoleViewOut.loanBookFailed(LoanBook.DETAILS_NOT_MATCH);
             }
+
+        }
+    }
+
+    public static void giveBackBook(String command) {
+        Matcher matcher = ConsoleCommands.GIVE_BACK_BOOK.getMatcher(command);
+        if (matcher.find()) {
+            MyTime time = setTime(matcher.group(8));
+            Libraries library;
+            Book book;
+            int studentId;
+            long nationalCode;
+            try {
+                if (matcher.group(5).equalsIgnoreCase("centralLibrary") ||
+                        matcher.group(5).equalsIgnoreCase("mainLibrary")) {
+                    library = Libraries.CENTRAL_LIBRARY;
+                    book = new Book(Long.parseLong(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                } else if (matcher.group(5).equalsIgnoreCase("libraryA") ||
+                        matcher.group(5).equalsIgnoreCase("A")) {
+                    library = Libraries.LIBRARY_A;
+                    book = new Book(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3));
+                } else if (matcher.group(5).equalsIgnoreCase("libraryB") ||
+                        matcher.group(5).equalsIgnoreCase("B")) {
+                    library = Libraries.LIBRARY_B;
+                    book = new Book(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3));
+                } else {
+                    book = new Book();
+                    library = Libraries.NO_WHERE_YET;
+                }
+                if (matcher.group(6).equalsIgnoreCase("student")) {
+                    studentId = Integer.parseInt(matcher.group(7));
+                    controller.giveBackBookFromStudent(book, library, studentId, time);
+                } else {
+                    nationalCode = Long.parseLong(matcher.group(7));
+                    controller.giveBackBookFromProfessor(book, library, nationalCode, time);
+                }
+            } catch (NumberFormatException e) {
+                ConsoleViewOut.giveBackBook(GiveBackBook.DETAILS_NOT_MATCH);
+            }
+        }
+    }
+
+    public static void goNextDay(String command) {
+        Matcher matcher = ConsoleCommands.GIVE_BACK_BOOK.getMatcher(command);
+        if (matcher.find()) {
+            int day;
+            if (matcher.group(1) == null) {
+                day = 1;
+            } else {
+                day = Integer.parseInt(matcher.group(1).trim());
+            }
+            controller.goNextDay(day);
         }
     }
 

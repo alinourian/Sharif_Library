@@ -27,4 +27,9 @@ public class MyTime {
     public int getSec() {
         return sec;
     }
+
+    @Override
+    public String toString() {
+        return "" + hour + ":" + min;
+    }
 }

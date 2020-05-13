@@ -23,4 +23,8 @@ public class Person {
     public Type getType () {
         return null;
     }
+
+    public String getFullName() {
+        return FullName;
+    }
 }

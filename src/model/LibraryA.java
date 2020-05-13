@@ -81,10 +81,11 @@ public class LibraryA implements Library {
         }else {
             books.replace(test, books.get(test)-1);
             CentralManagement.allBooksInLibraries.replace(test, books.get(test)-1);
+            numbersOfBooks--;
             if (borrowedBooks.get(test) == null)
                 borrowedBooks.put(test, 1);
             else
-                borrowedBooks.put(test, borrowedBooks.get(test)+1);
+                borrowedBooks.replace(test, borrowedBooks.get(test)+1);
             return true;
         }
     }
@@ -112,6 +113,7 @@ public class LibraryA implements Library {
         for (Employee employee : employees) {
             if (employee.nationalCode == nationalCode) {
                 employee.updateWorkingDays(newSchedule);
+                break;
             }
         }
     }
@@ -131,5 +133,9 @@ public class LibraryA implements Library {
 
     public Map<Book, Integer> getBooks() {
         return books;
+    }
+
+    public Map<Book, Integer> getBorrowedBooks() {
+        return borrowedBooks;
     }
 }

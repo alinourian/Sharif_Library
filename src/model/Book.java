@@ -2,8 +2,8 @@ package model;
 
 import enums.Libraries;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Book {
     private String bookName;
@@ -17,7 +17,7 @@ public class Book {
     private String companyName;
     private double price;
     private Libraries bookPlace;
-    private Map<Person, String> borrowers;
+    private List<Person> borrowers;
 
     public Book(String bookName, int pages, int publishedYear,
                 String writer, String language, long ISBN, double price) {
@@ -31,7 +31,7 @@ public class Book {
         this.translatorName = "";
         this.numbersAvailable = 0;
         this.bookPlace = Libraries.NO_WHERE_YET;
-        borrowers = new HashMap<>();
+        borrowers = new ArrayList<>();
     }
 
     public Book(String bookName, int pages, int publishedYear, String writer,
@@ -46,16 +46,19 @@ public class Book {
         this.translatorName = translatorName;
         this.numbersAvailable = 0;
         this.bookPlace = Libraries.NO_WHERE_YET;
-        borrowers = new HashMap<>();
+        borrowers = new ArrayList<>();
     }
 
-    public Book(String bookName, long ISBN, int publishedYear) {
+    public Book() {
+    }
+
+    public Book(String bookName, long ISBN, int publishedYear) {//help
         this.bookName = bookName;
         this.ISBN = ISBN;
         this.publishedYear = publishedYear;
     }
 
-    public Book(long ISBN, int publishedYear) {
+    public Book(long ISBN, int publishedYear) {//help
         this.ISBN = ISBN;
         this.publishedYear = publishedYear;
     }
@@ -65,6 +68,18 @@ public class Book {
         this.writer = Name;
         this.publishedYear = publishedYear;
         this.translatorName = translatorName;
+    }
+
+    public String getBookDetails() {
+        String string;
+        if (bookPlace == Libraries.LIBRARY_A) {
+            string = "" + bookName + ", " + publishedYear + ", " + translatorName;
+        } else if (bookPlace == Libraries.LIBRARY_B) {
+            string = "" + writer + ", " + publishedYear + ", " + translatorName;
+        } else {
+            string = "" + ISBN + ", " + publishedYear;
+        }
+        return string;
     }
 
     public int getPublishedYear() {
@@ -101,6 +116,10 @@ public class Book {
 
     public void setBookPlace(Libraries bookPlace) {
         this.bookPlace = bookPlace;
+    }
+
+    public List<Person> getBorrowers() {
+        return borrowers;
     }
 
     @Override

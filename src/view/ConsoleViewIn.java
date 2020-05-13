@@ -59,7 +59,8 @@ public abstract class ConsoleViewIn {
                 SplitCommand.findBook(command);
                 System.out.println("\n");
             } else if (ConsoleCommands.GIVE_BACK_BOOK.getMatcher(command).matches()) {//14
-                System.out.println(14);
+                SplitCommand.giveBackBook(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.GIVE_BACK_TO_STORE.getMatcher(command).matches()) {//15
                 System.out.println(15);
             } else if (ConsoleCommands.LOAN_BOOK.getMatcher(command).matches()) {//16
@@ -73,7 +74,8 @@ public abstract class ConsoleViewIn {
             } else if (ConsoleCommands.SELL_BOOK.getMatcher(command).matches()) {//19
                 System.out.println(19);
             } else if (ConsoleCommands.NEXT_DAY.getMatcher(command).matches()) {//20
-                System.out.println(20);
+                SplitCommand.goNextDay(command);
+                System.out.println("\n");
             } else if (command.equals("000")) {//0000 test
                 AtTheEnd.run();
             } else {//21

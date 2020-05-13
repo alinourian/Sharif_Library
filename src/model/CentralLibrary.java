@@ -80,10 +80,11 @@ public class CentralLibrary implements Library {
         }else {
             books.replace(test, books.get(test)-1);
             CentralManagement.allBooksInLibraries.replace(test, books.get(test)-1);
+            numbersOfBooks--;
             if (borrowedBooks.get(test) == null)
                 borrowedBooks.put(test, 1);
             else
-                borrowedBooks.put(test, borrowedBooks.get(test)+1);
+                borrowedBooks.replace(test, borrowedBooks.get(test)+1);
             return true;
         }
     }
@@ -125,6 +126,7 @@ public class CentralLibrary implements Library {
         for (Employee storeEmployee : storeEmployees) {
             if (storeEmployee.nationalCode == nationalCode) {
                 storeEmployee.updateWorkingDays(newSchedule);
+                return;
             }
         }
     }
@@ -148,10 +150,6 @@ public class CentralLibrary implements Library {
         return libraryEmployees;
     }
 
-    public List<Employee> getStoreEmployees() {
-        return storeEmployees;
-    }
-
     public Map<Book, Integer> getBooks() {
         return books;
     }
@@ -162,5 +160,9 @@ public class CentralLibrary implements Library {
 
     public int getNumbersOfEmployee() {
         return numbersOfEmployee;
+    }
+
+    public Map<Book, Integer> getBorrowedBooks() {
+        return borrowedBooks;
     }
 }

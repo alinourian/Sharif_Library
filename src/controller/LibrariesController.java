@@ -9,7 +9,8 @@ import java.util.ArrayList;
 public class LibrariesController {
     private static LibrariesController instance;
 
-    private MyDate startDate;
+    private final MyDate startDate;
+    private MyDate currentDay;
     private CentralLibrary centralLibrary = CentralLibrary.getInstance();
     private LibraryA libraryA = LibraryA.getInstance();
     private LibraryB libraryB = LibraryB.getInstance();
@@ -27,6 +28,7 @@ public class LibrariesController {
 
     public void setDate(int year, int month, int day) {
         startDate.setDate(year, month, day);
+        currentDay = startDate;
         ConsoleViewOut.setDate(year, month, day);
     }
 
@@ -212,9 +214,14 @@ public class LibrariesController {
         if (employee == null) {
             ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WORKER_NOT_EXIST);
         } else {
-            if (employee.getWorkPlace() == libraries ||
-                    (libraries == Libraries.STORE && employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY)) {
-                employee.updateWorkingDays(schedule);
+            if (libraries == Libraries.STORE && employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
+                CentralLibrary.getInstance().changeEmployeeSchedule(nationalCode, schedule);
+                ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
+            } else if (libraries == Libraries.LIBRARY_A) {
+                LibraryB.getInstance().changeEmployeeSchedule(nationalCode, schedule);
+                ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
+            } else if (libraries == Libraries.LIBRARY_B) {
+                LibraryB.getInstance().changeEmployeeSchedule(nationalCode, schedule);
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else {
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WRONG_LIBRARY);
@@ -222,7 +229,7 @@ public class LibrariesController {
         }
     }
 
-    public void findBook(int studentId, String bookName, long ISBN, int publishedYear) {
+    public void findBookForStudent(int studentId, String bookName, long ISBN, int publishedYear) {
         if (CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId) == null) {
             ConsoleViewOut.findBookFailed(false);
         } else {
@@ -236,7 +243,7 @@ public class LibrariesController {
         }
     }
 
-    public void findBook(long nationalCode, String bookName, long ISBN, int publishedYear) {
+    public void findBookForProfessors(long nationalCode, String bookName, long ISBN, int publishedYear) {
         if (CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode) == null) {
             ConsoleViewOut.findBookFailed(false);
         } else {
@@ -250,18 +257,21 @@ public class LibrariesController {
         }
     }
 
-    public void loanBook(long ISBN, int publishedYear, Libraries library,
-                         int studentId, MyTime loanTime, MyDate giveBackDate) {
+    public void loanBookInCentralLibraryForStudent(long ISBN, int publishedYear, Libraries library,
+                                                   int studentId, MyTime loanTime, MyDate giveBackDate) {
         if (library == Libraries.CENTRAL_LIBRARY) {
-            if (CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId) == null) {
+            Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
+            if (student == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
+            } else if (student.getBudget() <= 10000) {
+                ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(ISBN, publishedYear);
                 Book book = CentralLibrary.getInstance().search(test);
                 if (book == null) {
                     ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_FIND);
                 } else {
-                    doLoanBook(studentId, book, loanTime, giveBackDate);
+                    doLoanForStudent(studentId, book, loanTime, giveBackDate);
                 }
             }
         } else {
@@ -269,18 +279,21 @@ public class LibrariesController {
         }
     }
 
-    public void loanBook(long ISBN, int publishedYear, Libraries library,
-                         long nationalCode, MyTime loanTime, MyDate giveBackDate) {
+    public void loanBookInCentralLibraryForProfessor(long ISBN, int publishedYear, Libraries library,
+                                                     long nationalCode, MyTime loanTime, MyDate giveBackDate) {
         if (library == Libraries.CENTRAL_LIBRARY) {
-            if (CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode) == null) {
+            Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
+            if (professor == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
+            } else if (professor.getBudget() <= 10000) {
+                ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(ISBN, publishedYear);
                 Book book = CentralLibrary.getInstance().search(test);
                 if (book == null) {
                     ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_FIND);
                 } else {
-                    doLoanBook(nationalCode, book, loanTime, giveBackDate);
+                    doLoanForProfessor(nationalCode, book, loanTime, giveBackDate);
                 }
             }
         } else {
@@ -288,30 +301,35 @@ public class LibrariesController {
         }
     }
 
-    public void loanBook(String bookNameOrWriter, int publishedYear, String translator, Libraries library,
-                         int studentId, MyTime loanTime, MyDate giveBackDate) {
+    public void loanBookInLibrary_A_B_ForStudent(String bookNameOrWriter, int publishedYear, String translator
+            , Libraries library, int studentId, MyTime loanTime, MyDate giveBackDate) {
+        Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
         if (library == Libraries.LIBRARY_A) {
-            if (CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId) == null) {
+            if (student == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
+            } else if (student.getBudget() <= 10000) {
+                ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(bookNameOrWriter, publishedYear, translator);
                 Book book = LibraryA.getInstance().search(test);
                 if (book == null) {
                     ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_FIND);
                 } else {
-                    doLoanBook(studentId, book, loanTime, giveBackDate);
+                    doLoanForStudent(studentId, book, loanTime, giveBackDate);
                 }
             }
         } else if (library == Libraries.LIBRARY_B) {
-            if (CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId) == null) {
+            if (student == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
+            } else if (student.getBudget() <= 10000) {
+                ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(bookNameOrWriter, publishedYear, translator);
                 Book book = LibraryA.getInstance().search(test);
                 if (book == null) {
                     ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_FIND);
                 } else {
-                    doLoanBook(studentId, book, loanTime, giveBackDate);
+                    doLoanForStudent(studentId, book, loanTime, giveBackDate);
                 }
             }
         } else {
@@ -319,30 +337,35 @@ public class LibrariesController {
         }
     }
 
-    public void loanBook(String bookNameOrWriter, int publishedYear, String translator, Libraries library,
-                         long nationalCode, MyTime loanTime, MyDate giveBackDate) {
+    public void loanBookInLibrary_A_B_ForProfessor(String bookNameOrWriter, int publishedYear, String translator
+            , Libraries library, long nationalCode, MyTime loanTime, MyDate giveBackDate) {
+        Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
         if (library == Libraries.LIBRARY_A) {
-            if (CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode) == null) {
+            if (professor == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
+            } else if (professor.getBudget() <= 10000) {
+                ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(bookNameOrWriter, publishedYear, translator);
                 Book book = LibraryA.getInstance().search(test);
                 if (book == null) {
                     ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_FIND);
                 } else {
-                    doLoanBook(nationalCode, book, loanTime, giveBackDate);
+                    doLoanForProfessor(nationalCode, book, loanTime, giveBackDate);
                 }
             }
         } else if (library == Libraries.LIBRARY_B) {
-            if (CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode) == null) {
+            if (professor == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
+            } else if (professor.getBudget() <= 10000) {
+                ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(bookNameOrWriter, publishedYear, translator);
                 Book book = LibraryB.getInstance().search(test);
                 if (book == null) {
                     ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_FIND);
                 } else {
-                    doLoanBook(nationalCode, book, loanTime, giveBackDate);
+                    doLoanForProfessor(nationalCode, book, loanTime, giveBackDate);
                 }
             }
         } else {
@@ -350,11 +373,275 @@ public class LibrariesController {
         }
     }
 
-    public void doLoanBook(int studentId, Book book, MyTime loanTime, MyDate giveBackDate) {
+    public void giveBackBookFromStudent(Book book, Libraries library, int studentId, MyTime time) {
+        Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
+        if (student == null) {
+            ConsoleViewOut.giveBackBook(GiveBackBook.PERSON_NOT_MEMBER);
+        } else {
+            if (library == Libraries.CENTRAL_LIBRARY) {
+                Book test = CentralLibrary.getInstance().search(book);
+                boolean bool = CentralLibrary.getInstance().getBorrowedBooks().containsKey(test);
+                if (bool) {
+                    giveBackBook(student, test, time);
+                } else {
+                    ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
+                }
+            } else if (library == Libraries.LIBRARY_A) {
+                Book test = LibraryA.getInstance().search(book);
+                boolean bool = LibraryA.getInstance().getBorrowedBooks().containsKey(test);
+                if (bool) {
+                    giveBackBook(student, test, time);
+                } else {
+                    ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
+                }
+            } else if (library == Libraries.LIBRARY_B) {
+                Book test = CentralLibrary.getInstance().search(book);
+                boolean bool = CentralLibrary.getInstance().getBorrowedBooks().containsKey(test);
+                if (bool) {
+                    giveBackBook(student, test, time);
+                } else {
+                    ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
+                }
+            } else {
+                ConsoleViewOut.giveBackBook(GiveBackBook.LIBRARY_NOT_EXIST);
+            }
+        }
+    }
+
+    public void giveBackBookFromProfessor(Book book, Libraries library, long nationalCode, MyTime time) {
+        Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
+        if (professor == null) {
+            ConsoleViewOut.giveBackBook(GiveBackBook.PERSON_NOT_MEMBER);
+        } else if (book.getBookPlace() == Libraries.NO_WHERE_YET) {
+            ConsoleViewOut.giveBackBook(GiveBackBook.DETAILS_NOT_MATCH);
+        } else {
+            if (library == Libraries.CENTRAL_LIBRARY) {
+                Book test = CentralLibrary.getInstance().search(book);
+                boolean bool = CentralLibrary.getInstance().getBorrowedBooks().containsKey(test);
+                if (bool) {
+                    giveBackBook(professor, test, time);
+                } else {
+                    ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
+                }
+            } else if (library == Libraries.LIBRARY_A) {
+                Book test = LibraryA.getInstance().search(book);
+                boolean bool = LibraryA.getInstance().getBorrowedBooks().containsKey(test);
+                if (bool) {
+                    giveBackBook(professor, test, time);
+                } else {
+                    ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
+                }
+            } else if (library == Libraries.LIBRARY_B) {
+                Book test = CentralLibrary.getInstance().search(book);
+                boolean bool = CentralLibrary.getInstance().getBorrowedBooks().containsKey(test);
+                if (bool) {
+                    giveBackBook(professor, test, time);
+                } else {
+                    ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
+                }
+            } else {
+                ConsoleViewOut.giveBackBook(GiveBackBook.LIBRARY_NOT_EXIST);
+            }
+        }
+    }
+
+    public void goNextDay(int add) {
+        int y = add / 365;
+        int m = (add % 365) > 186 ? ((add % 365) - 186) / 30 + 6 : (add % 365) / 31;
+        int d = m > 6 ? (add % 365) - 186 - (m - 6) * 30 : (add % 365) - m * 31;
+
+        int day = currentDay.getDay() + d;
+        int month = currentDay.getMonth() + m;
+        int year = currentDay.getYear() + y;
+        if (month > 12) {
+            month -= 12;
+            year++;
+        }
+        if (month < 6) {
+            if (day > 31) {
+                day -= 31;
+                month++;
+            }
+        }else if (month < 12) {
+            if (day > 30) {
+                day -= 30;
+                month++;
+            }
+        } else {// month = 12
+            if (day > 30) {
+                day -= 30;
+                month = 1;
+                year++;
+            }
+        }
+        currentDay.setDate(year, month, day);
+        calcFines();
+        ConsoleViewOut.goNextDay(currentDay);
+    }
+
+    private void calcFines() {
 
     }
 
-    public void doLoanBook(long nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
+    private void giveBackBook(Person person, Book book, MyTime time) {
+        if (book.getBorrowers().contains(person)) {
+            book.getBorrowers().remove(person);
+            String[] loanDate = CentralManagement.allBorrowedBooks.get("" +
+                    person.getNationalCode() + "" + book.getISBN()).split(",");
+            CentralManagement.allBorrowedBooks.remove("" + person.getNationalCode() + "" + book.getISBN());
+            String string = setGiveBackBookString(person, book, time, loanDate[4].trim(), loanDate[5].trim());
+            CentralManagement.allReturnedBooks.put("" + person.getNationalCode() + "" + book.getISBN(), string);
+            ConsoleViewOut.giveBackBook(GiveBackBook.SUCCESSFUL);
+        } else {
+            ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_FOR_SOMEONE_ELSE);
+        }
+    }
 
+    private String setGiveBackBookString(Person person, Book book, MyTime time, String loanDate, String giveBackDate) {
+        String string;
+        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), time.getHour());
+        if (person.getType() == Type.PROFESSOR) {
+            Student student = (Student) person;
+            string = book.getBookDetails() + ", Student, " + student.getStudentId() + ", " + loanDate + ", " +
+                    giveBackDate + ", " + currentDay + ", " + time;
+
+        } else {
+            Professor professor = (Professor) person;
+            string = book.getBookDetails() + ", Professor, " + professor.getNationalCode() + ", " + loanDate + ", " +
+                    giveBackDate + ", " + currentDay + ", " + time;
+        }
+        String help;
+        try {
+            help = ", " + employee.getFullName();
+        } catch (NullPointerException e) {
+            help = "-";
+        }
+        return string + help;
+    }
+
+    private void doLoanForStudent(int studentId, Book book, MyTime loanTime, MyDate giveBackDate) {
+        if (calcWeekDay(giveBackDate) == null) {
+            ConsoleViewOut.loanBookFailed(LoanBook.DATE_PASSED);
+            return;
+        }if (calcWeekDay(currentDay) == WeekDays.FRIDAY) {
+            ConsoleViewOut.loanBookFailed(LoanBook.LIBRARY_IS_CLOSED);
+            return;
+        }if (book.getBorrowers().contains(CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId))) {
+            ConsoleViewOut.loanBookFailed(LoanBook.BORROW_THE_SAME_BOOK);
+            return;
+        }
+        boolean bool;
+        if (book.getBookPlace() == Libraries.LIBRARY_A) {
+            bool = LibraryA.getInstance().borrowBook(book);
+        } else if (book.getBookPlace() == Libraries.LIBRARY_B) {
+            bool = LibraryB.getInstance().borrowBook(book);
+        } else {
+            bool = CentralLibrary.getInstance().borrowBook(book);
+        }
+        if (bool) {
+            setLoanBookStringForStudent(studentId, book, loanTime, giveBackDate);
+            ConsoleViewOut.loanBook();
+        } else {
+            ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_AVAILABLE);
+        }
+    }
+
+    private void doLoanForProfessor(long nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
+        if (calcWeekDay(giveBackDate) == null) {
+            ConsoleViewOut.loanBookFailed(LoanBook.DATE_PASSED);
+            return;
+        }if (calcWeekDay(currentDay) == WeekDays.FRIDAY) {
+            ConsoleViewOut.loanBookFailed(LoanBook.LIBRARY_IS_CLOSED);
+            return;
+        }if (book.getBorrowers().contains(CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode))) {
+            ConsoleViewOut.loanBookFailed(LoanBook.BORROW_THE_SAME_BOOK);
+            return;
+        }
+        boolean bool;
+        if (book.getBookPlace() == Libraries.LIBRARY_A) {
+            bool = LibraryA.getInstance().borrowBook(book);
+        } else if (book.getBookPlace() == Libraries.LIBRARY_B) {
+            bool = LibraryB.getInstance().borrowBook(book);
+        } else {
+            bool = CentralLibrary.getInstance().borrowBook(book);
+        }
+        if (bool) {
+            setLoanBookStringForProfessor(nationalCode, book, loanTime, giveBackDate);
+            ConsoleViewOut.loanBook();
+        } else {
+            ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_AVAILABLE);
+        }
+    }
+
+    private void setLoanBookStringForStudent(int studentId, Book book, MyTime loanTime, MyDate giveBackDate) {
+        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), loanTime.getHour());
+        String string = book.getBookDetails() + ", Student, " + studentId +
+                ", " + currentDay + ", " + loanTime + ", " + giveBackDate;
+        String help;
+        try {
+            help = ", " + employee.getFullName();
+        } catch (NullPointerException e) {
+            help = "-";
+        }
+        Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
+        assert student != null;
+        CentralManagement.allBorrowedBooks.put("" + student.getNationalCode() + "" + book.getISBN(), string + help);
+        book.getBorrowers().add(student);
+    }
+
+    private void setLoanBookStringForProfessor(long nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
+        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), loanTime.getHour());
+        String string = book.getBookDetails() + ", Professor, " + nationalCode +
+                ", " + currentDay + ", " + loanTime + ", " + giveBackDate;
+        String help;
+        try {
+            help = ", " + employee.getFullName();
+        } catch (NullPointerException e) {
+            help = "-";
+        }
+        CentralManagement.allBorrowedBooks.put("" + nationalCode + "" + book.getISBN() , string + help);
+        book.getBorrowers().add(CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode));
+    }
+
+    private WeekDays calcWeekDay(MyDate date) {
+        int dayPassed = daysPassed(date);
+        if (dayPassed < 0) {
+            return null;
+        }
+        WeekDays day;
+        if (dayPassed % 7 == 0) {
+            day = WeekDays.SATURDAY;
+        } else if (dayPassed % 7 == 1) {
+            day = WeekDays.SUNDAY;
+        } else if (dayPassed % 7 == 2) {
+            day = WeekDays.MONDAY;
+        } else if (dayPassed % 7 == 3) {
+            day = WeekDays.TUESDAY;
+        } else if (dayPassed % 7 == 4) {
+            day = WeekDays.WEDNESDAY;
+        } else if (dayPassed % 7 == 5) {
+            day = WeekDays.THURSDAY;
+        } else {
+            day = WeekDays.FRIDAY;
+        }
+        return  day;
+    }
+
+    private int daysPassed(MyDate date) {//if kab is 3 years after now!
+        int dayPassed1 = startDate.getMonth() > 6 ?  (startDate.getMonth() - 7) * 30 + 186 + startDate.getDay() - 1 :
+                (startDate.getMonth() - 1) * 31 + startDate.getDay() - 1;
+        int year = date.getYear() - startDate.getYear();
+        //int daysOfFourYearsHappens = (year / 4) * 1461;
+        //int daysOfRestYears = ((year % 4) * 365);
+        //int daysOfYears = daysOfFourYearsHappens + daysOfRestYears;
+        int daysOfYears = year * 365;
+        int daysOfMonth = date.getMonth() > 6 ? (date.getMonth() - 7) * 30 + 186 : (date.getMonth() - 1) * 31;
+        int days = date.getDay();
+        int dayPassed2 = daysOfYears + daysOfMonth + days;
+        return dayPassed2 - dayPassed1;
+    }
+
+    public MyDate getStartDate() {
+        return startDate;
     }
 }

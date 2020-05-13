@@ -3,5 +3,10 @@ package enums;
 public enum LoanBook {
     DETAILS_NOT_MATCH,
     PERSON_NOT_MEMBER,
-    BOOK_NOT_FIND;
+    BOOK_NOT_FIND,
+    BOOK_NOT_AVAILABLE,
+    DATE_PASSED,
+    LIBRARY_IS_CLOSED,
+    BUDGET_NOT_ENOUGH,
+    BORROW_THE_SAME_BOOK;
 }
