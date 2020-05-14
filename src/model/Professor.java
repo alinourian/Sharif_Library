@@ -20,13 +20,17 @@ public class Professor extends Person{
         this.budget += budget;
     }
 
-    public long getBudget() {
-        return budget;
+    public void fine(long fine) {
+        this.budget -= fine;
     }
 
     @Override
     public Type getType() {
         return Type.PROFESSOR;
+    }
+
+    public long getBudget() {
+        return budget;
     }
 
     @Override

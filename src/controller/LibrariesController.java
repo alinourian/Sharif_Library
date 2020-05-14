@@ -475,22 +475,48 @@ public class LibrariesController {
             }
         }
         currentDay.setDate(year, month, day);
-        calcFines();
         ConsoleViewOut.goNextDay(currentDay);
+        calcFines(add);
     }
 
-    private void calcFines() {
+    private void calcFines(int add) {
+        CentralLibrary.getInstance().setFineForDelay(currentDay, add);
+        LibraryA.getInstance().setFineForDelay(currentDay, add);
+        LibraryB.getInstance().setFineForDelay(currentDay, add);
+        ConsoleViewOut.setFines();
+    }
 
+    public boolean datePass(MyDate thisDate, MyDate thatDate) {
+        if (thisDate.getYear() > thatDate.getYear()) {
+            return true;
+        } else if (thisDate.getYear() < thatDate.getYear()) {
+            return false;
+        } else {
+            if (thisDate.getMonth() > thatDate.getMonth()) {
+                return true;
+            } else if (thisDate.getMonth() < thatDate.getMonth()) {
+                return false;
+            } else {
+                return thisDate.getDay() > thatDate.getDay();
+            }
+        }
     }
 
     private void giveBackBook(Person person, Book book, MyTime time) {
-        if (book.getBorrowers().contains(person)) {
+        if (book.getBorrowers().containsKey(person)) {
             book.getBorrowers().remove(person);
             String[] loanDate = CentralManagement.allBorrowedBooks.get("" +
                     person.getNationalCode() + "" + book.getISBN()).split(",");
             CentralManagement.allBorrowedBooks.remove("" + person.getNationalCode() + "" + book.getISBN());
             String string = setGiveBackBookString(person, book, time, loanDate[4].trim(), loanDate[5].trim());
             CentralManagement.allReturnedBooks.put("" + person.getNationalCode() + "" + book.getISBN(), string);
+            if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
+                CentralLibrary.getInstance().returnBook(book);
+            } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
+                LibraryA.getInstance().returnBook(book);
+            } else { // LibraryB
+                LibraryB.getInstance().returnBook(book);
+            }
             ConsoleViewOut.giveBackBook(GiveBackBook.SUCCESSFUL);
         } else {
             ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_FOR_SOMEONE_ELSE);
@@ -526,7 +552,7 @@ public class LibrariesController {
         }if (calcWeekDay(currentDay) == WeekDays.FRIDAY) {
             ConsoleViewOut.loanBookFailed(LoanBook.LIBRARY_IS_CLOSED);
             return;
-        }if (book.getBorrowers().contains(CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId))) {
+        }if (book.getBorrowers().containsKey(CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId))) {
             ConsoleViewOut.loanBookFailed(LoanBook.BORROW_THE_SAME_BOOK);
             return;
         }
@@ -553,7 +579,7 @@ public class LibrariesController {
         }if (calcWeekDay(currentDay) == WeekDays.FRIDAY) {
             ConsoleViewOut.loanBookFailed(LoanBook.LIBRARY_IS_CLOSED);
             return;
-        }if (book.getBorrowers().contains(CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode))) {
+        }if (book.getBorrowers().containsKey(CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode))) {
             ConsoleViewOut.loanBookFailed(LoanBook.BORROW_THE_SAME_BOOK);
             return;
         }
@@ -586,7 +612,7 @@ public class LibrariesController {
         Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
         assert student != null;
         CentralManagement.allBorrowedBooks.put("" + student.getNationalCode() + "" + book.getISBN(), string + help);
-        book.getBorrowers().add(student);
+        book.getBorrowers().put(student, giveBackDate);
     }
 
     private void setLoanBookStringForProfessor(long nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
@@ -600,11 +626,11 @@ public class LibrariesController {
             help = "-";
         }
         CentralManagement.allBorrowedBooks.put("" + nationalCode + "" + book.getISBN() , string + help);
-        book.getBorrowers().add(CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode));
+        book.getBorrowers().put(CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode), giveBackDate);
     }
 
-    private WeekDays calcWeekDay(MyDate date) {
-        int dayPassed = daysPassed(date);
+    public WeekDays calcWeekDay(MyDate date) {
+        int dayPassed = daysPassed(date, startDate);
         if (dayPassed < 0) {
             return null;
         }
@@ -627,10 +653,10 @@ public class LibrariesController {
         return  day;
     }
 
-    private int daysPassed(MyDate date) {//if kab is 3 years after now!
-        int dayPassed1 = startDate.getMonth() > 6 ?  (startDate.getMonth() - 7) * 30 + 186 + startDate.getDay() - 1 :
-                (startDate.getMonth() - 1) * 31 + startDate.getDay() - 1;
-        int year = date.getYear() - startDate.getYear();
+    public int daysPassed(MyDate date, MyDate fromDate) {//if kab is 3 years after now!
+        int dayPassed1 = fromDate.getMonth() > 6 ?  (fromDate.getMonth() - 7) * 30 + 186 + fromDate.getDay() - 1 :
+                (fromDate.getMonth() - 1) * 31 + fromDate.getDay() - 1;
+        int year = date.getYear() - fromDate.getYear();
         //int daysOfFourYearsHappens = (year / 4) * 1461;
         //int daysOfRestYears = ((year % 4) * 365);
         //int daysOfYears = daysOfFourYearsHappens + daysOfRestYears;

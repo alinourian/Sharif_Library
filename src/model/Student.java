@@ -24,13 +24,17 @@ public class Student extends Person {
         this.budget += budget;
     }
 
-    public long getBudget() {
-        return budget;
+    public void fine(long fine) {
+        this.budget -= fine;
     }
 
     @Override
     public Type getType() {
         return Type.STUDENT;
+    }
+
+    public long getBudget() {
+        return budget;
     }
 
     public int getStudentId() {

@@ -1,5 +1,6 @@
 package model;
 
+import controller.MyDate;
 import enums.AddBook;
 import enums.WeekDays;
 
@@ -10,13 +11,14 @@ public interface Library {
     static final int AREA = 500;
     static final int NUMBERS_OF_ROOMS = 8;
     static final int  MAX_BOOKS = 30;
+    static final int FINE = 1000;
 
     AddBook addBook(Book book);
     boolean borrowBook(Book book);
     void returnBook(Book book);
     void addEmployee(Employee employee);
     void changeEmployeeSchedule(long nationalCode, List<WeekDays> newSchedule);
-    double setFineForDelay();
+    void setFineForDelay(MyDate currentDay, int addDay);
     Book search(Book book);
 
 }

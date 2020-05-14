@@ -1,9 +1,9 @@
 package model;
 
+import controller.MyDate;
 import enums.Libraries;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class Book {
     private String bookName;
@@ -17,7 +17,7 @@ public class Book {
     private String companyName;
     private double price;
     private Libraries bookPlace;
-    private List<Person> borrowers;
+    private HashMap<Person, MyDate> borrowers;
 
     public Book(String bookName, int pages, int publishedYear,
                 String writer, String language, long ISBN, double price) {
@@ -31,7 +31,7 @@ public class Book {
         this.translatorName = "";
         this.numbersAvailable = 0;
         this.bookPlace = Libraries.NO_WHERE_YET;
-        borrowers = new ArrayList<>();
+        borrowers = new HashMap<>();
     }
 
     public Book(String bookName, int pages, int publishedYear, String writer,
@@ -46,7 +46,7 @@ public class Book {
         this.translatorName = translatorName;
         this.numbersAvailable = 0;
         this.bookPlace = Libraries.NO_WHERE_YET;
-        borrowers = new ArrayList<>();
+        borrowers = new HashMap<>();
     }
 
     public Book() {
@@ -118,7 +118,7 @@ public class Book {
         this.bookPlace = bookPlace;
     }
 
-    public List<Person> getBorrowers() {
+    public HashMap<Person, MyDate> getBorrowers() {
         return borrowers;
     }
 

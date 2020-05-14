@@ -1,7 +1,10 @@
 package model;
 
+import controller.LibrariesController;
+import controller.MyDate;
 import enums.AddBook;
 import enums.Libraries;
+import enums.Type;
 import enums.WeekDays;
 
 import java.util.ArrayList;
@@ -119,8 +122,23 @@ public class LibraryB implements Library {
     }
 
     @Override
-    public double setFineForDelay() {
-        return 0;
+    public void setFineForDelay(MyDate currentDay, int addDay) {
+        for (Book book : borrowedBooks.keySet()) {
+            for (Person person : book.getBorrowers().keySet()) {
+                if (LibrariesController.getInstance().datePass(currentDay, book.getBorrowers().get(person))) {
+                    int dayPassed;
+                    dayPassed = LibrariesController.getInstance().daysPassed(currentDay, book.getBorrowers().get(person));
+                    long fine = addDay > dayPassed ? dayPassed * FINE : addDay * FINE;
+                    if (person.getType() == Type.STUDENT) {
+                        Student student = (Student)person;
+                        student.fine(fine);
+                    } else if (person.getType() == Type.PROFESSOR) {
+                        Professor professor = (Professor)person;
+                        professor.fine(fine);
+                    }
+                }
+            }
+        }
     }
 
     public int getNumbersOfBooks() {

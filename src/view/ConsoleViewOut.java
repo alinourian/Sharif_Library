@@ -202,6 +202,10 @@ public abstract class ConsoleViewOut {
         System.out.println("Today date is " + date);
     }
 
+    public static void setFines() {
+        System.out.println("Fines updates!");
+    }
+
     public static void invalidCommands() {
         System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
     }
