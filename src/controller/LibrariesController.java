@@ -484,10 +484,14 @@ public class LibrariesController {
         Book test = new Book(bookName, ISBN, publishedYear);
         Book book = CentralManagement.searchBookInLibraries(test);
         if (book == null) {
-            ConsoleViewOut.addBookToStore(false);
+            ConsoleViewOut.addBookToStore(0);
         } else {
-            CentralLibrary.getInstance().addToStore(book);
-            ConsoleViewOut.addBookToStore(true);
+            if (CentralLibrary.getInstance().getBooksForSell().contains(book)) {
+                ConsoleViewOut.addBookToStore(-1);
+            } else {
+                CentralLibrary.getInstance().addToStore(book);
+                ConsoleViewOut.addBookToStore(1);
+            }
         }
     }
 
@@ -527,6 +531,7 @@ public class LibrariesController {
                 }
                 int price = CentralLibrary.getInstance().sellBook(book, bool);
                 if (Store.pay(student, price)) {
+                    Store.sellBook(book);
                     setSellBookStringForStudent(student, book, price, time);
                     ConsoleViewOut.sellBook(SellBook.SUCCESSFULL);
                 } else {
@@ -567,6 +572,7 @@ public class LibrariesController {
                 }
                 int price = CentralLibrary.getInstance().sellBook(book, bool);
                 if (Store.pay(professor, price)) {
+                    Store.sellBook(book);
                     setSellBookStringForProfessor(professor, book, price, time);
                     ConsoleViewOut.sellBook(SellBook.SUCCESSFULL);
                 } else {
@@ -588,7 +594,7 @@ public class LibrariesController {
 
     //privates methods...
     private void setSellBookStringForStudent(Student student, Book book, int Price, MyTime time) {
-        
+
     }
 
     private void setSellBookStringForProfessor(Professor professor, Book book, int Price, MyTime time) {

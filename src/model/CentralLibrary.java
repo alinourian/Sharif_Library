@@ -191,7 +191,6 @@ public class CentralLibrary implements Library {
         } else {
             price = book.getPrice();
         }
-        Store.sellBook(book);
         return price;
     }
 

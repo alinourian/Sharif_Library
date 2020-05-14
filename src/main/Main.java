@@ -1,11 +1,12 @@
 package main;
 
+import controller.SaveDate;
 import view.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        //SaveDate.UploadFile();
+        SaveDate.UploadFile();
         ConsoleViewIn.start();
         AtTheEnd.run();
     }

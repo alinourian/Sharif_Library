@@ -209,11 +209,13 @@ public abstract class ConsoleViewOut {
         System.out.println("Fines updates!");
     }
 
-    public static void addBookToStore(boolean bool) {
-        if (bool) {
-            System.out.println("The book have successfully added to store.");
-        } else {
+    public static void addBookToStore(int status) {
+        if (status == 1) {
+            System.out.println("The book have been successfully added to store.");
+        } else if (status == 0) {
             System.err.println("The book does not exist!");
+        } else if (status == -1) {
+            System.out.println("This book had been added to the store befor!");
         }
     }
 
