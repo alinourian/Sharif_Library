@@ -71,7 +71,7 @@ public abstract class SplitCommand {
         if (matcher.find()) {
             Gender gender = setGender(matcher.group(4));
             Libraries libraries = setLibrary(matcher.group(5));
-            if (libraries != null) {
+            if (libraries != Libraries.NO_WHERE_YET) {
                 controller.createWorker(matcher.group(1), Integer.parseInt(matcher.group(2)),
                         Long.parseLong(matcher.group(3)), gender, libraries);
             } else {
@@ -240,7 +240,7 @@ public abstract class SplitCommand {
     }
 
     public static void goNextDay(String command) {
-        Matcher matcher = ConsoleCommands.GIVE_BACK_BOOK.getMatcher(command);
+        Matcher matcher = ConsoleCommands.NEXT_DAY.getMatcher(command);
         if (matcher.find()) {
             int day;
             if (matcher.group(1) == null) {
@@ -249,6 +249,50 @@ public abstract class SplitCommand {
                 day = Integer.parseInt(matcher.group(1).trim());
             }
             controller.goNextDay(day);
+        }
+    }
+
+    public static void addBookToStore(String command) {
+        Matcher matcher = ConsoleCommands.ADD_BOOK_TO_STORE.getMatcher(command);
+        if (matcher.find()) {
+            controller.addBookToStore(matcher.group(2),
+                        Long.parseLong(matcher.group(3)), Integer.parseInt(matcher.group(4)));
+        }
+    }
+
+    public static void setDiscount(String command) {
+        Matcher matcher = ConsoleCommands.SET_DISCOUNT.getMatcher(command);
+        if (matcher.find()) {
+            controller.setDiscount(matcher.group(1), Integer.parseInt(matcher.group(2)));
+        }
+    }
+
+    public static void sellBook(String command) {
+        Matcher matcher = ConsoleCommands.SELL_BOOK.getMatcher(command);
+        if (matcher.find()) {
+            MyTime time = setTime(matcher.group(6));
+            String discountCode = matcher.group(7) == null ? "-" : matcher.group(7).trim();
+            if (matcher.group(4).equalsIgnoreCase("student")) {
+                controller.sellBookToStudent(matcher.group(1), Long.parseLong(matcher.group(2)),
+                        Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(5)), time, discountCode);
+            } else { //professor
+                controller.sellBookToProfessor(matcher.group(1), Long.parseLong(matcher.group(2)),
+                        Integer.parseInt(matcher.group(3)), Long.parseLong(matcher.group(5)), time, discountCode);
+            }
+        }
+    }
+
+    public static void giveBackBookToStore(String command) {
+        Matcher matcher = ConsoleCommands.GIVE_BACK_TO_STORE.getMatcher(command);
+        if (matcher.find()) {
+            MyTime time = setTime(matcher.group(6));
+            if (matcher.group(4).equalsIgnoreCase("student")) {
+                controller.giveBackBookToStoreFromStudent(matcher.group(1), Long.parseLong(matcher.group(2)),
+                        Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(5)), time);
+            } else { //professor
+                controller.giveBackBookToStoreFromProfessor(matcher.group(1), Long.parseLong(matcher.group(2)),
+                        Integer.parseInt(matcher.group(3)), Long.parseLong(matcher.group(5)), time);
+            }
         }
     }
 
@@ -314,10 +358,8 @@ public abstract class SplitCommand {
         } else if (string.equalsIgnoreCase("libraryB") ||
                 string.equalsIgnoreCase("B")) {
             libraries = Libraries.LIBRARY_B;
-        } else if (string.equalsIgnoreCase("store")) {
-            libraries = Libraries.STORE;
         } else {
-            return null;
+            libraries = Libraries.NO_WHERE_YET;
         }
         return libraries;
     }

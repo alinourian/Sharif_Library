@@ -32,12 +32,12 @@ public enum ConsoleCommands {
             "(\\w+\\s*:\\s*\\w+)\\s*"),//15
     NEXT_DAY("(?i)\\s*next\\s+day(\\s+\\d+)?\\s*"),//16
     ADD_BOOK_TO_STORE("(?i)\\s*add\\s+book\\s+store\\s+(mainLibrary|centralLibrary)" +//17
-            "\\s+(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)\\s*"),//17
-    SET_DISCOUNT("(?i)\\s*set\\s+discountCode\\s+(.+)"),//18
-    SELL_BOOK("(?i)\\s*sell\\s+book\\s+(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)" +//19
-            "\\s+(\\w+)\\s+(\\w+)\\s+(\\w+\\s*:\\s*\\w+)(\\s+.+)?\\s*"),//19
-    GIVE_BACK_TO_STORE("(?i)\\s*give\\s+back\\s+store\\s+(\\w+)\\s*,\\s*" +//20
-            "(\\w+)\\s*,\\s*(\\w+)\\s+(\\w+)\\s+(\\w+)\\s+(\\w+\\s*:\\s*\\w+)\\s*"),//20
+            "\\s+(\\w+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*"),//17
+    SET_DISCOUNT("(?i)\\s*set\\s+discountCode\\s+(\\w+)\\s+(\\d+)"),//18
+    SELL_BOOK("(?i)\\s*sell\\s+book\\s+(\\w+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)" +//19
+            "\\s+(student|professor)\\s+(\\d+)\\s+(\\d+\\s*:\\s*\\d+)(\\s+\\w+)?\\s*"),//19
+    GIVE_BACK_TO_STORE("(?i)\\s*giveBack\\s+store\\s+(\\w+)\\s*,\\s*" +//20
+            "(\\d+)\\s*,\\s*(\\d+)\\s+(student|professor)\\s+(\\d+)\\s+(\\d+\\s*:\\s*\\d+)\\s*"),//20
     END("(?i)\\s*end\\s*");//21
 
     private final Pattern commandPattern;

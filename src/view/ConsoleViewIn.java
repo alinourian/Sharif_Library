@@ -1,6 +1,5 @@
 package view;
 
-import controller.SaveDate;
 import main.AtTheEnd;
 
 import java.util.Scanner;
@@ -27,7 +26,8 @@ public abstract class ConsoleViewIn {
                 SplitCommand.addBookToLibrary(command);
                 System.out.println("\n");
             } else if (ConsoleCommands.ADD_BOOK_TO_STORE.getMatcher(command).matches()) {//3
-                System.out.println(3);
+                SplitCommand.addBookToStore(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.ADD_STUDENT.getMatcher(command).matches()) {//4
                 SplitCommand.addStudent(command);
                 System.out.println("\n");
@@ -62,7 +62,8 @@ public abstract class ConsoleViewIn {
                 SplitCommand.giveBackBook(command);
                 System.out.println("\n");
             } else if (ConsoleCommands.GIVE_BACK_TO_STORE.getMatcher(command).matches()) {//15
-                System.out.println(15);
+                SplitCommand.giveBackBookToStore(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.LOAN_BOOK.getMatcher(command).matches()) {//16
                 SplitCommand.loanBook(command);
                 System.out.println("\n");
@@ -70,16 +71,19 @@ public abstract class ConsoleViewIn {
                 SplitCommand.setSchedule(command);
                 System.out.println("\n");
             } else if (ConsoleCommands.SET_DISCOUNT.getMatcher(command).matches()) {//18
-                System.out.println(18);
+                SplitCommand.setDiscount(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.SELL_BOOK.getMatcher(command).matches()) {//19
-                System.out.println(19);
+                SplitCommand.sellBook(command);
+                System.out.println("\n");
             } else if (ConsoleCommands.NEXT_DAY.getMatcher(command).matches()) {//20
                 SplitCommand.goNextDay(command);
                 System.out.println("\n");
-            } else if (command.equals("000")) {//0000 test
+            } else if (command.equalsIgnoreCase("show all details") ||
+            command.equalsIgnoreCase("000")) {//0000 test
                 AtTheEnd.run();
             } else {//21
-                System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
+                System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!\n");
             }
         }
         System.out.println("Program has finished! Good luck;)");

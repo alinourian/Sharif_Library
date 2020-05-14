@@ -20,6 +20,13 @@ public class CentralLibrary implements Library {
     private Map<Book, Integer> books;
     private Map<Book, Integer> borrowedBooks;
 
+    //store properties...
+    private String discountCode;
+    private int discountPercent;
+    private ArrayList<Book> booksForSell;
+    private HashMap<String, String> booksSold;
+    private HashMap<String, String> booksGiveBack;
+    //....
 
     public static CentralLibrary getInstance() {
         if(instance == null) {
@@ -33,6 +40,11 @@ public class CentralLibrary implements Library {
         libraryEmployees = new ArrayList<>();
         books = new HashMap<>();
         borrowedBooks = new HashMap<>();
+        discountCode = "NoDiscount";
+        discountPercent = 0;
+        booksForSell = new ArrayList<>();
+        booksSold = new HashMap<>();
+        booksGiveBack = new HashMap<>();
     }
 
     @Override
@@ -177,5 +189,25 @@ public class CentralLibrary implements Library {
 
     public Map<Book, Integer> getBorrowedBooks() {
         return borrowedBooks;
+    }
+
+    public String getDiscountCode() {
+        return discountCode;
+    }
+
+    public int getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public ArrayList<Book> getBooksForSell() {
+        return booksForSell;
+    }
+
+    public HashMap<String, String> getBooksSold() {
+        return booksSold;
+    }
+
+    public HashMap<String, String> getBooksGiveBack() {
+        return booksGiveBack;
     }
 }

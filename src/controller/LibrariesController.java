@@ -214,7 +214,7 @@ public class LibrariesController {
         if (employee == null) {
             ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WORKER_NOT_EXIST);
         } else {
-            if (libraries == Libraries.STORE && employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
+            if (libraries == Libraries.CENTRAL_LIBRARY && employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
                 CentralLibrary.getInstance().changeEmployeeSchedule(nationalCode, schedule);
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else if (libraries == Libraries.LIBRARY_A) {
@@ -479,6 +479,36 @@ public class LibrariesController {
         calcFines(add);
     }
 
+    //methods for store...
+    public void addBookToStore(String bookName, long ISBN, int publishedYear) {
+        return;
+    }
+
+    public void setDiscount(String code, int percent) {
+        return;
+    }
+
+    public void sellBookToStudent(String bookName, long ISBN, int publishedYear,
+                                  int studentId, MyTime time, String discountCode) {
+        return;
+    }
+
+    public void sellBookToProfessor(String bookName, long ISBN, int publishedYear,
+                                    long nationalCode, MyTime time, String discountCode) {
+        return;
+    }
+
+    public void giveBackBookToStoreFromStudent(String bookName, long ISBN, int publishedYear,
+                                    int studentId, MyTime time) {
+        return;
+    }
+
+    public void giveBackBookToStoreFromProfessor(String bookName, long ISBN, int publishedYear,
+                                               long nationalCode, MyTime time) {
+        return;
+    }
+
+    //privates methods...
     private void calcFines(int add) {
         CentralLibrary.getInstance().setFineForDelay(currentDay, add);
         LibraryA.getInstance().setFineForDelay(currentDay, add);
@@ -667,7 +697,5 @@ public class LibrariesController {
         return dayPassed2 - dayPassed1;
     }
 
-    public MyDate getStartDate() {
-        return startDate;
-    }
+
 }
