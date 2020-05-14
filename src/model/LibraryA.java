@@ -156,4 +156,8 @@ public class LibraryA implements Library {
     public Map<Book, Integer> getBorrowedBooks() {
         return borrowedBooks;
     }
+
+    public void setNumbersOfBooks(int numbersOfBooks) {
+        this.numbersOfBooks = numbersOfBooks;
+    }
 }

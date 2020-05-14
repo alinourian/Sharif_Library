@@ -15,12 +15,12 @@ public class Book {
     private String translatorName;
     private int numbersAvailable;
     private String companyName;
-    private double price;
+    private int price;
     private Libraries bookPlace;
     private HashMap<Person, MyDate> borrowers;
 
     public Book(String bookName, int pages, int publishedYear,
-                String writer, String language, long ISBN, double price) {
+                String writer, String language, long ISBN, int price) {
         this.bookName = bookName;
         this.pages = pages;
         this.publishedYear = publishedYear;
@@ -35,7 +35,7 @@ public class Book {
     }
 
     public Book(String bookName, int pages, int publishedYear, String writer,
-                String language, long ISBN, double price, String translatorName) {
+                String language, long ISBN, int price, String translatorName) {
         this.bookName = bookName;
         this.pages = pages;
         this.publishedYear = publishedYear;
@@ -108,6 +108,10 @@ public class Book {
 
     public Libraries getBookPlace() {
         return bookPlace;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     public void setNumbersAvailable(int numbersAvailable) {

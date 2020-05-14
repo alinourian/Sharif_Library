@@ -24,8 +24,8 @@ public class CentralLibrary implements Library {
     private String discountCode;
     private int discountPercent;
     private ArrayList<Book> booksForSell;
-    private HashMap<String, String> booksSold;
-    private HashMap<String, String> booksGiveBack;
+    private HashMap<String, String> booksSold;//used in controller
+    private HashMap<String, String> booksGiveBack;// ...
     //....
 
     public static CentralLibrary getInstance() {
@@ -175,6 +175,30 @@ public class CentralLibrary implements Library {
         }
     }
 
+    public void addToStore(Book book) {
+        booksForSell.add(book);
+    }
+
+    public void setDiscountCode(String code, int percent) {
+        this.discountCode = code;
+        this.discountPercent = percent;
+    }
+
+    public int sellBook(Book book, boolean bool) {
+        int price;
+        if (bool) {// disount
+            price = book.getPrice() * (100 - discountPercent) / 100;
+        } else {
+            price = book.getPrice();
+        }
+        Store.sellBook(book);
+        return price;
+    }
+
+    public void giveBackBook() {
+        return;
+    }
+
     public List<Employee> getLibraryEmployees() {
         return libraryEmployees;
     }
@@ -209,5 +233,13 @@ public class CentralLibrary implements Library {
 
     public HashMap<String, String> getBooksGiveBack() {
         return booksGiveBack;
+    }
+
+    public int getNumbersOfBooks() {
+        return numbersOfBooks;
+    }
+
+    public void setNumbersOfBooks(int numbersOfBooks) {
+        this.numbersOfBooks = numbersOfBooks;
     }
 }

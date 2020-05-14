@@ -1,8 +1,11 @@
 package view;
 
 import controller.MyDate;
+import controller.MyTime;
 import enums.*;
 import model.*;
+
+import java.util.regex.Matcher;
 
 public abstract class ConsoleViewOut {
     public static void setDate(int year, int month, int day) {
@@ -204,6 +207,43 @@ public abstract class ConsoleViewOut {
 
     public static void setFines() {
         System.out.println("Fines updates!");
+    }
+
+    public static void addBookToStore(boolean bool) {
+        if (bool) {
+            System.out.println("The book have successfully added to store.");
+        } else {
+            System.err.println("The book does not exist!");
+        }
+    }
+
+    public static void setDiscount() {
+        System.out.println("Discount-Code set.");
+    }
+
+    public static void checkDiscount(boolean bool) {
+        if (bool)
+            System.out.println("Discount-Code valid.");
+        else
+            System.err.println("Discount-Code not valid!");
+    }
+
+    public static void sellBook(SellBook sellBook) {
+        if (sellBook == SellBook.SUCCESSFULL) {
+            System.out.println("You successfully bought the book.");
+        } else if (sellBook == SellBook.PERSON_NOT_EXIST) {
+            System.err.println("Person with this ID never exist!");
+        } else if (sellBook == SellBook.BOOK_NOT_EXIST) {
+            System.err.println("The book with this details does not found");
+        } else if (sellBook == SellBook.BOOK_NOT_AVAILABLE) {
+            System.err.println("Sorry! This book is not available now.");
+        } else if (sellBook == SellBook.BUDGET_NOT_ENOUGH) {
+            System.err.println("Sorry! Budget is not enough to buy!");
+        }
+    }
+
+    public static void giveBackBookToStore() {
+
     }
 
     public static void invalidCommands() {

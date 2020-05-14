@@ -33,7 +33,7 @@ public class LibrariesController {
     }
 
     public void createBook(String bookName, int pages, int publishedYear,
-                           String writer, String language, long ISBN, double price) {
+                           String writer, String language, long ISBN, int price) {
         Book book;
         book = new Book(bookName, pages, publishedYear, writer, language, ISBN, price);
         Book test = CentralManagement.searchBookInAllBooks(book);
@@ -47,7 +47,7 @@ public class LibrariesController {
         }
     }
     public void createBook(String bookName, int pages, int publishedYear, String writer,
-                           String language, long ISBN, double price, String translator) {
+                           String language, long ISBN, int price, String translator) {
         Book book;
         book = new Book(bookName, pages, publishedYear, writer, language, ISBN, price, translator);
         Book test = CentralManagement.searchBookInAllBooks(book);
@@ -481,21 +481,99 @@ public class LibrariesController {
 
     //methods for store...
     public void addBookToStore(String bookName, long ISBN, int publishedYear) {
-        return;
+        Book test = new Book(bookName, ISBN, publishedYear);
+        Book book = CentralManagement.searchBookInLibraries(test);
+        if (book == null) {
+            ConsoleViewOut.addBookToStore(false);
+        } else {
+            CentralLibrary.getInstance().addToStore(book);
+            ConsoleViewOut.addBookToStore(true);
+        }
     }
 
     public void setDiscount(String code, int percent) {
-        return;
+        CentralLibrary.getInstance().setDiscountCode(code, percent);
+        ConsoleViewOut.setDiscount();
     }
 
     public void sellBookToStudent(String bookName, long ISBN, int publishedYear,
                                   int studentId, MyTime time, String discountCode) {
-        return;
+        Student student = CentralManagement.getStudentByStudentIdInAllStudents(studentId);
+        Book test = new Book(bookName, ISBN, publishedYear);
+        Book book = CentralManagement.searchBookInLibraries(test);
+        if (student == null) {
+            ConsoleViewOut.sellBook(SellBook.PERSON_NOT_EXIST);
+        } else if (book == null) {
+            ConsoleViewOut.sellBook(SellBook.BOOK_NOT_EXIST);
+        } else {
+            int availible;
+            if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
+                availible = CentralLibrary.getInstance().getBooks().get(book);
+            } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
+                availible = LibraryA.getInstance().getBooks().get(book);
+            } else { //LibraryB
+                availible = LibraryB.getInstance().getBooks().get(book);
+            }
+            if (availible == 0) {
+                ConsoleViewOut.sellBook(SellBook.BOOK_NOT_AVAILABLE);
+            } else {
+                boolean bool;
+                if (Store.checkDiscountCode(discountCode)) {
+                    bool = true;
+                    ConsoleViewOut.checkDiscount(true);
+                } else {
+                    bool = false;
+                    ConsoleViewOut.checkDiscount(false);
+                }
+                int price = CentralLibrary.getInstance().sellBook(book, bool);
+                if (Store.pay(student, price)) {
+                    setSellBookStringForStudent(student, book, price, time);
+                    ConsoleViewOut.sellBook(SellBook.SUCCESSFULL);
+                } else {
+                    ConsoleViewOut.sellBook(SellBook.BUDGET_NOT_ENOUGH);
+                }
+            }
+        }
     }
 
     public void sellBookToProfessor(String bookName, long ISBN, int publishedYear,
                                     long nationalCode, MyTime time, String discountCode) {
-        return;
+        Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
+        Book test = new Book(bookName, ISBN, publishedYear);
+        Book book = CentralManagement.searchBookInLibraries(test);
+        if (professor == null) {
+            ConsoleViewOut.sellBook(SellBook.PERSON_NOT_EXIST);
+        } else if (book == null) {
+            ConsoleViewOut.sellBook(SellBook.BOOK_NOT_EXIST);
+        } else {
+            int availible;
+            if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
+                availible = CentralLibrary.getInstance().getBooks().get(book);
+            } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
+                availible = LibraryA.getInstance().getBooks().get(book);
+            } else { //LibraryB
+                availible = LibraryB.getInstance().getBooks().get(book);
+            }
+            if (availible == 0) {
+                ConsoleViewOut.sellBook(SellBook.BOOK_NOT_AVAILABLE);
+            } else {
+                boolean bool;
+                if (Store.checkDiscountCode(discountCode)) {
+                    bool = true;
+                    ConsoleViewOut.checkDiscount(true);
+                } else {
+                    bool = false;
+                    ConsoleViewOut.checkDiscount(false);
+                }
+                int price = CentralLibrary.getInstance().sellBook(book, bool);
+                if (Store.pay(professor, price)) {
+                    setSellBookStringForProfessor(professor, book, price, time);
+                    ConsoleViewOut.sellBook(SellBook.SUCCESSFULL);
+                } else {
+                    ConsoleViewOut.sellBook(SellBook.BUDGET_NOT_ENOUGH);
+                }
+            }
+        }
     }
 
     public void giveBackBookToStoreFromStudent(String bookName, long ISBN, int publishedYear,
@@ -509,6 +587,14 @@ public class LibrariesController {
     }
 
     //privates methods...
+    private void setSellBookStringForStudent(Student student, Book book, int Price, MyTime time) {
+        
+    }
+
+    private void setSellBookStringForProfessor(Professor professor, Book book, int Price, MyTime time) {
+
+    }
+
     private void calcFines(int add) {
         CentralLibrary.getInstance().setFineForDelay(currentDay, add);
         LibraryA.getInstance().setFineForDelay(currentDay, add);
