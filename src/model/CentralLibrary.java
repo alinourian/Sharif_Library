@@ -195,8 +195,16 @@ public class CentralLibrary implements Library {
     }
 
     public void giveBackBookToStore(Person person, Book book, int dayPassed, int price) {
-
-        return;
+        if (person.getType() == Type.PROFESSOR) {
+            Professor professor = (Professor)person;
+            professor.addBudget(price * (10 - dayPassed) / 10);
+            booksSold.remove("" + professor.getNationalCode() + "" + book.getISBN());
+        } else { //Student
+            Student student = (Student)person;
+            student.addBudget(price * (10 - dayPassed) / 10);
+            booksSold.remove("" + student.getStudentId() + "" + book.getISBN());
+        }
+        Store.giveBackBook(book);
     }
 
     public List<Employee> getLibraryEmployees() {

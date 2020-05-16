@@ -909,6 +909,4 @@ public class LibrariesController {
         int dayPassed2 = daysOfYears + daysOfMonth + days;
         return dayPassed2 - dayPassed1;
     }
-
-
 }

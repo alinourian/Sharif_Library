@@ -35,7 +35,17 @@ public abstract class Store {
         return code.equals(CentralLibrary.getInstance().getDiscountCode());
     }
 
-    public static void giveBackBook() {
-
+    public static void giveBackBook(Book book) {
+        if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
+            CentralLibrary.getInstance().setNumbersOfBooks(CentralLibrary.getInstance().getNumbersOfBooks() + 1);
+            CentralLibrary.getInstance().getBooks().replace(book, CentralLibrary.getInstance().getBooks().get(book) + 1);
+        } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
+            LibraryA.getInstance().setNumbersOfBooks(LibraryA.getInstance().getNumbersOfBooks() + 1);
+            LibraryA.getInstance().getBooks().replace(book, LibraryA.getInstance().getBooks().get(book) + 1);
+        } else { //LibraryB
+            LibraryB.getInstance().setNumbersOfBooks(LibraryB.getInstance().getNumbersOfBooks() + 1);
+            LibraryB.getInstance().getBooks().replace(book, LibraryB.getInstance().getBooks().get(book) + 1);
+        }
+        CentralManagement.allBooksInLibraries.replace(book, CentralManagement.allBooksInLibraries.get(book) + 1);
     }
 }
