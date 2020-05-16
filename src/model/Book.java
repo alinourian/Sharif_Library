@@ -72,13 +72,7 @@ public class Book {
 
     public String getBookDetails() {
         String string;
-        if (bookPlace == Libraries.LIBRARY_A) {
-            string = "" + bookName + ", " + publishedYear + ", " + translatorName;
-        } else if (bookPlace == Libraries.LIBRARY_B) {
-            string = "" + writer + ", " + publishedYear + ", " + translatorName;
-        } else {
-            string = "" + ISBN + ", " + publishedYear;
-        }
+        string = "" + ISBN + ", " + publishedYear;
         return string;
     }
 

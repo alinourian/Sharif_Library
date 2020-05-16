@@ -186,7 +186,7 @@ public class CentralLibrary implements Library {
 
     public int sellBook(Book book, boolean bool) {
         int price;
-        if (bool) {// disount
+        if (bool) {// discount
             price = book.getPrice() * (100 - discountPercent) / 100;
         } else {
             price = book.getPrice();
@@ -194,7 +194,8 @@ public class CentralLibrary implements Library {
         return price;
     }
 
-    public void giveBackBook() {
+    public void giveBackBookToStore(Person person, Book book, int dayPassed, int price) {
+
         return;
     }
 

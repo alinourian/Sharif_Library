@@ -490,6 +490,7 @@ public class LibrariesController {
                 ConsoleViewOut.addBookToStore(-1);
             } else {
                 CentralLibrary.getInstance().addToStore(book);
+                CentralLibrary.getInstance().getBooksForSell().add(book);
                 ConsoleViewOut.addBookToStore(1);
             }
         }
@@ -510,15 +511,15 @@ public class LibrariesController {
         } else if (book == null) {
             ConsoleViewOut.sellBook(SellBook.BOOK_NOT_EXIST);
         } else {
-            int availible;
+            int available;
             if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
-                availible = CentralLibrary.getInstance().getBooks().get(book);
+                available = CentralLibrary.getInstance().getBooks().get(book);
             } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
-                availible = LibraryA.getInstance().getBooks().get(book);
+                available = LibraryA.getInstance().getBooks().get(book);
             } else { //LibraryB
-                availible = LibraryB.getInstance().getBooks().get(book);
+                available = LibraryB.getInstance().getBooks().get(book);
             }
-            if (availible == 0) {
+            if (available == 0) {
                 ConsoleViewOut.sellBook(SellBook.BOOK_NOT_AVAILABLE);
             } else {
                 boolean bool;
@@ -551,15 +552,15 @@ public class LibrariesController {
         } else if (book == null) {
             ConsoleViewOut.sellBook(SellBook.BOOK_NOT_EXIST);
         } else {
-            int availible;
+            int available;
             if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
-                availible = CentralLibrary.getInstance().getBooks().get(book);
+                available = CentralLibrary.getInstance().getBooks().get(book);
             } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
-                availible = LibraryA.getInstance().getBooks().get(book);
+                available = LibraryA.getInstance().getBooks().get(book);
             } else { //LibraryB
-                availible = LibraryB.getInstance().getBooks().get(book);
+                available = LibraryB.getInstance().getBooks().get(book);
             }
-            if (availible == 0) {
+            if (available == 0) {
                 ConsoleViewOut.sellBook(SellBook.BOOK_NOT_AVAILABLE);
             } else {
                 boolean bool;
@@ -584,21 +585,141 @@ public class LibrariesController {
 
     public void giveBackBookToStoreFromStudent(String bookName, long ISBN, int publishedYear,
                                     int studentId, MyTime time) {
-        return;
+        Student student = CentralManagement.getStudentByStudentIdInAllStudents(studentId);
+        if (student == null) {
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.PERSON_NOT_EXIST);
+            return;
+        }
+        Book test = new Book(bookName, ISBN, publishedYear);
+        Book book = CentralManagement.searchBookInLibraries(test);
+        if (book == null) {
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_EXIST);
+            return;
+        }
+        if (!CentralLibrary.getInstance().getBooksForSell().contains(book)) {
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_FOR_SAIL);
+            return;
+        }
+        String key = "" + studentId + "" + book.getISBN();
+        if (!CentralLibrary.getInstance().getBooksSold().containsKey(key)) {
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_SOLD_TO_THIS_PERSON);
+            return;
+        }
+        doGiveBackToStoreFromStudent(student, book, time);
     }
 
     public void giveBackBookToStoreFromProfessor(String bookName, long ISBN, int publishedYear,
                                                long nationalCode, MyTime time) {
-        return;
+        Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
+        if (professor == null) {
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.PERSON_NOT_EXIST);
+            return;
+        }
+        Book test = new Book(bookName, ISBN, publishedYear);
+        Book book = CentralManagement.searchBookInLibraries(test);
+        if (book == null) {
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_EXIST);
+            return;
+        }
+        if (!CentralLibrary.getInstance().getBooksForSell().contains(book)) {
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_FOR_SAIL);
+            return;
+        }
+        String key = "" + nationalCode + "" + book.getISBN();
+        if (!CentralLibrary.getInstance().getBooksSold().containsKey(key)) {
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_SOLD_TO_THIS_PERSON);
+            return;
+        }
+        doGiveBackToStoreFromProfessor(professor, book, time);
     }
 
     //privates methods...
-    private void setSellBookStringForStudent(Student student, Book book, int Price, MyTime time) {
-
+    private void doGiveBackToStoreFromStudent(Student student, Book book, MyTime time) {
+        String string = "" + student.getStudentId() + "" + book.getISBN();
+        String[] splitDetails;
+        splitDetails = CentralLibrary.getInstance().getBooksSold().get(string).split(",");
+        MyDate sellDate = setDayByString(splitDetails[5].trim());
+        int price = Integer.parseInt(splitDetails[6].trim());
+        int dayPassed = daysPassed(currentDay, sellDate);
+        if (dayPassed > 5) { //Can't give back
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.CANNOT_GIVE_BACK);
+        } else {
+            CentralLibrary.getInstance().giveBackBookToStore(student, book, dayPassed, price);
+            setGiveBackStoreString(student, book, time, sellDate, price * dayPassed /10);
+            ConsoleViewOut.giveBackBookToStore(price * (10 - dayPassed) /10);
+        }
     }
 
-    private void setSellBookStringForProfessor(Professor professor, Book book, int Price, MyTime time) {
+    private void doGiveBackToStoreFromProfessor(Professor professor, Book book, MyTime time) {
+        String string = "" + professor.getNationalCode() + "" + book.getISBN();
+        String[] splitDetails;
+        splitDetails = CentralLibrary.getInstance().getBooksSold().get(string).split(",");
+        MyDate sellDate = setDayByString(splitDetails[5].trim());
+        int price = Integer.parseInt(splitDetails[6].trim());
+        int dayPassed = daysPassed(currentDay, sellDate);
+        if (dayPassed > 5) { //Can't give back
+            ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.CANNOT_GIVE_BACK);
+        } else {
+            CentralLibrary.getInstance().giveBackBookToStore(professor, book, dayPassed, price);
+            setGiveBackStoreString(professor, book, time, sellDate, price * dayPassed /10);
+            ConsoleViewOut.giveBackBookToStore(price * (10 - dayPassed) /10);
+        }
+    }
 
+    private void setGiveBackStoreString(Person person, Book book, MyTime time, MyDate sellDate, int newPrice) {
+        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), time.getHour());
+        String string;
+        String key;
+        if (person.getType() == Type.PROFESSOR) {
+            Professor professor = (Professor)person;
+            string = book.getBookDetails() + ", Professor, " + professor.getNationalCode() + ", " +
+            sellDate + ", " + currentDay + ", " + newPrice + ", " + employee.getFullName();
+            key = "" + professor.getNationalCode() + "" + book.getISBN();
+        } else { //Student
+            Student student = (Student)person;
+            string = book.getBookDetails() + ", Student, " + student.getStudentId() + ", " +
+                    sellDate + ", " + currentDay + ", " + newPrice + ", " + employee.getFullName();
+            key = "" + student.getStudentId() + "" + book.getISBN();
+        }
+        CentralLibrary.getInstance().getBooksGiveBack().put(key, string);
+    }
+
+    private MyDate setDayByString(String time) {
+        MyDate myDate;
+        String[] help = time.split("/");
+        int year = Integer.parseInt(help[0].trim());
+        int month = Integer.parseInt(help[1].trim());
+        int day = Integer.parseInt(help[2].trim());
+        myDate = new MyDate(year, month, day);
+        return myDate;
+    }
+
+    private void setSellBookStringForStudent(Student student, Book book, int price, MyTime time) {
+        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), time.getHour());
+        String string = book.getBookDetails() + ", Student, " + student.getStudentId() + ", " + currentDay +
+                ", " + price;
+        String help;
+        try {
+            help = ", " + employee.getFullName();
+        } catch (NullPointerException e) {
+            help = "-";
+        }
+        String key = "" + student.getStudentId() + "" + book.getISBN();
+        CentralLibrary.getInstance().getBooksSold().put(key, string + help);
+    }
+
+    private void setSellBookStringForProfessor(Professor professor, Book book, int price, MyTime time) {
+        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), time.getHour());
+        String string = book.getBookDetails() + ", Professor, " + professor.getNationalCode() + ", " + currentDay +
+                ", " + price;
+        String help;
+        try {
+            help = ", " + employee.getFullName();
+        } catch (NullPointerException e) {
+            help = "-";
+        }
+        String key = "" + professor.getNationalCode() + "" + book.getISBN();
+        CentralLibrary.getInstance().getBooksSold().put(key, string + help);
     }
 
     private void calcFines(int add) {

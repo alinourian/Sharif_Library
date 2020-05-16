@@ -1,11 +1,8 @@
 package view;
 
 import controller.MyDate;
-import controller.MyTime;
 import enums.*;
 import model.*;
-
-import java.util.regex.Matcher;
 
 public abstract class ConsoleViewOut {
     public static void setDate(int year, int month, int day) {
@@ -244,8 +241,23 @@ public abstract class ConsoleViewOut {
         }
     }
 
-    public static void giveBackBookToStore() {
+    public static void giveBackBookToStore(GiveBackBookToStore status) {
+        if (status == GiveBackBookToStore.BOOK_NOT_EXIST) {
+            System.err.println("This book does not exist at all!");
+        } else if (status == GiveBackBookToStore.PERSON_NOT_EXIST) {
+            System.err.println("The person with this ID does not ever exist!");
+        } else if (status == GiveBackBookToStore.BOOK_NOT_FOR_SAIL) {
+            System.err.println("This book never be on sail! How did u buy it?:/");
+        } else if (status == GiveBackBookToStore.BOOK_NOT_SOLD_TO_THIS_PERSON) {
+            System.err.println("This Book have never sold to person with this ID!!!:///");
+        } else if (status == GiveBackBookToStore.CANNOT_GIVE_BACK) {
+            System.err.println("Sorry! It's too much late for giving it back!");
+        }
+    }
 
+    public static void giveBackBookToStore(int profit) {
+        System.out.println("Well, You successfully gave back the book to the store.");
+        System.out.println("" + profit + "$ was returned to you!");
     }
 
     public static void invalidCommands() {

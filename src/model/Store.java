@@ -32,14 +32,10 @@ public abstract class Store {
     }
 
     public static boolean checkDiscountCode(String code) {
-        if (code.equals(CentralLibrary.getInstance().getDiscountCode()))
-            return true;
-        else
-            return false;
+        return code.equals(CentralLibrary.getInstance().getDiscountCode());
     }
 
-
     public static void giveBackBook() {
-        return;
+
     }
 }
