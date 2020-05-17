@@ -47,6 +47,13 @@ public class CentralLibrary implements Library {
         booksGiveBack = new HashMap<>();
     }
 
+    private ArrayList<Employee> saturday = new ArrayList<>();
+    private ArrayList<Employee> sunday = new ArrayList<>();
+    private ArrayList<Employee> monday = new ArrayList<>();
+    private ArrayList<Employee> tuesday = new ArrayList<>();
+    private ArrayList<Employee> wednesday = new ArrayList<>();
+    private  ArrayList<Employee> thursday = new ArrayList<>();
+
     @Override
     public Book search(Book book) {
         for(Book test : CentralManagement.allBooksInLibraries.keySet()) {
@@ -175,6 +182,52 @@ public class CentralLibrary implements Library {
         }
     }
 
+    @Override
+    public Employee getWorkerByTime(WeekDays day, int hour) {
+        refreshWorkersSchedule();
+        Employee employee;
+        if (day == WeekDays.SATURDAY) {
+            employee = CentralManagement.getWorker(saturday, hour);
+        } else if (day == WeekDays.SUNDAY) {
+            employee = CentralManagement.getWorker(sunday, hour);
+        } else if (day == WeekDays.MONDAY) {
+            employee = CentralManagement.getWorker(monday, hour);
+        } else if (day == WeekDays.TUESDAY) {
+            employee = CentralManagement.getWorker(tuesday, hour);
+        } else if (day == WeekDays.WEDNESDAY) {
+            employee = CentralManagement.getWorker(wednesday, hour);
+        } else {
+            employee = CentralManagement.getWorker(thursday, hour);
+        }
+        return employee;
+    }
+
+    @Override
+    public void refreshWorkersSchedule() {
+        saturday.clear();
+        sunday.clear();
+        monday.clear();
+        tuesday.clear();
+        wednesday.clear();
+        thursday.clear();
+        for (Employee activeEmployee : CentralManagement.allActiveEmployees) {
+            if (activeEmployee.getWorkingDays().contains(WeekDays.SATURDAY)) {
+                saturday.add(activeEmployee);
+            } if (activeEmployee.getWorkingDays().contains(WeekDays.SUNDAY)) {
+                sunday.add(activeEmployee);
+            } if (activeEmployee.getWorkingDays().contains(WeekDays.MONDAY)) {
+                monday.add(activeEmployee);
+            } if (activeEmployee.getWorkingDays().contains(WeekDays.TUESDAY)) {
+                tuesday.add(activeEmployee);
+            } if (activeEmployee.getWorkingDays().contains(WeekDays.WEDNESDAY)) {
+                wednesday.add(activeEmployee);
+            } if (activeEmployee.getWorkingDays().contains(WeekDays.THURSDAY)) {
+                thursday.add(activeEmployee);
+            }
+        }
+    }
+
+    //store methods
     public void addToStore(Book book) {
         booksForSale.add(book);
     }
@@ -207,6 +260,7 @@ public class CentralLibrary implements Library {
         Store.giveBackBook(book);
     }
 
+    //getters and setters
     public List<Employee> getLibraryEmployees() {
         return libraryEmployees;
     }
@@ -227,10 +281,6 @@ public class CentralLibrary implements Library {
         return discountCode;
     }
 
-    public int getDiscountPercent() {
-        return discountPercent;
-    }
-
     public ArrayList<Book> getBooksForSale() {
         return booksForSale;
     }
@@ -249,5 +299,33 @@ public class CentralLibrary implements Library {
 
     public void setNumbersOfBooks(int numbersOfBooks) {
         this.numbersOfBooks = numbersOfBooks;
+    }
+
+    public List<Employee> getStoreEmployees() {
+        return storeEmployees;
+    }
+
+    public ArrayList<Employee> getSaturday() {
+        return saturday;
+    }
+
+    public ArrayList<Employee> getSunday() {
+        return sunday;
+    }
+
+    public ArrayList<Employee> getMonday() {
+        return monday;
+    }
+
+    public ArrayList<Employee> getTuesday() {
+        return tuesday;
+    }
+
+    public ArrayList<Employee> getWednesday() {
+        return wednesday;
+    }
+
+    public ArrayList<Employee> getThursday() {
+        return thursday;
     }
 }

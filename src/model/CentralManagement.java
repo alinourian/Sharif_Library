@@ -1,7 +1,6 @@
 package model;
 
-import controller.MyDate;
-import controller.MyTime;
+import enums.Libraries;
 import enums.WeekDays;
 
 import java.util.ArrayList;
@@ -22,13 +21,6 @@ public abstract class CentralManagement {
     public static Map<Book, Integer> allBooksInLibraries = new HashMap<>();
     public static Map<String, String> allBorrowedBooks = new HashMap<>();//just been used in controller - ID + details
     public static Map<String, String> allReturnedBooks = new HashMap<>();//just been used in controller - ID + details
-
-    private static ArrayList<Employee> saturday = new ArrayList<>();
-    private static ArrayList<Employee> sunday = new ArrayList<>();
-    private static ArrayList<Employee> monday = new ArrayList<>();
-    private static ArrayList<Employee> tuesday = new ArrayList<>();
-    private static ArrayList<Employee> wednesday = new ArrayList<>();
-    private static ArrayList<Employee> thursday = new ArrayList<>();
 
     public static Book searchBookInAllBooks(Book book) {
         for(Book test : allBooksEverExist) {
@@ -99,27 +91,19 @@ public abstract class CentralManagement {
         return null;
     }
 
-    public static Employee getWorkerByTime(WeekDays day, int hour) {
-        refreshWorkersSchedule();
-        setWorkersTime();
+    public static Employee getWorkerByTime(Libraries library, WeekDays day, int hour) {
         Employee employee;
-        if (day == WeekDays.SATURDAY) {
-            employee = getWorker(saturday, hour);
-        } else if (day == WeekDays.SUNDAY) {
-            employee = getWorker(sunday, hour);
-        } else if (day == WeekDays.MONDAY) {
-            employee = getWorker(monday, hour);
-        } else if (day == WeekDays.TUESDAY) {
-            employee = getWorker(tuesday, hour);
-        } else if (day == WeekDays.WEDNESDAY) {
-            employee = getWorker(wednesday, hour);
-        } else {
-            employee = getWorker(thursday, hour);
+        if (library == Libraries.CENTRAL_LIBRARY) {
+            employee = CentralLibrary.getInstance().getWorkerByTime(day, hour);
+        } else if (library == Libraries.LIBRARY_A) {
+            employee = LibraryA.getInstance().getWorkerByTime(day, hour);
+        } else { // LibraryB
+            employee = LibraryB.getInstance().getWorkerByTime(day, hour);
         }
         return employee;
     }
 
-    private static Employee getWorker(ArrayList<Employee> day, int hour) {
+    public static Employee getWorker(ArrayList<Employee> day, int hour) {
         int shift;
         int worker;
         try {
@@ -132,59 +116,9 @@ public abstract class CentralManagement {
     }
 
     public static void refreshWorkersSchedule() {
-        for (Employee activeEmployee : allActiveEmployees) {
-            if (activeEmployee.getWorkingDays().contains(WeekDays.SATURDAY)) {
-                saturday.add(activeEmployee);
-            } if (activeEmployee.getWorkingDays().contains(WeekDays.SUNDAY)) {
-                sunday.add(activeEmployee);
-            } if (activeEmployee.getWorkingDays().contains(WeekDays.MONDAY)) {
-                monday.add(activeEmployee);
-            } if (activeEmployee.getWorkingDays().contains(WeekDays.TUESDAY)) {
-                tuesday.add(activeEmployee);
-            } if (activeEmployee.getWorkingDays().contains(WeekDays.WEDNESDAY)) {
-                wednesday.add(activeEmployee);
-            } if (activeEmployee.getWorkingDays().contains(WeekDays.THURSDAY)) {
-                thursday.add(activeEmployee);
-            }
-        }
-    }
-
-    public static void setWorkersTime() {
-        try {
-            int saturdayShift = 12 / saturday.size();
-            int sundayShift = 12 / sunday.size();
-            int mondayShift = 12 / monday.size();
-            int tuesdayShift = 12 / tuesday.size();
-            int wednesdayShift = 12 / wednesday.size();
-            int thursdayShift = 12 / thursday.size();
-            int i = 0;
-            for (Employee employee : saturday) {
-                employee.getWorkTime().put(8 + i * saturdayShift, saturdayShift);
-                i++;
-            } i = 0;
-            for (Employee employee : sunday) {
-                employee.getWorkTime().put(8 + i * sundayShift, sundayShift);
-                i++;
-            } i = 0;
-            for (Employee employee : monday) {
-                employee.getWorkTime().put(8 + i * mondayShift, mondayShift);
-                i++;
-            }
-            for (Employee employee : tuesday) {
-                employee.getWorkTime().put(8 + i * tuesdayShift, tuesdayShift);
-                i++;
-            } i = 0;
-            for (Employee employee : wednesday) {
-                employee.getWorkTime().put(8 + i * wednesdayShift, wednesdayShift);
-                i++;
-            } i = 0;
-            for (Employee employee : thursday) {
-                employee.getWorkTime().put(8 + i * thursdayShift, thursdayShift);
-                i++;
-            }
-        } catch (ArithmeticException e) {
-            System.out.println("\"A day in a week doesn't have employee\"");
-        }
+        CentralLibrary.getInstance().refreshWorkersSchedule();
+        LibraryA.getInstance().refreshWorkersSchedule();
+        LibraryB.getInstance().refreshWorkersSchedule();
     }
 
     public static ArrayList<Employee> getAllEmployees() {
@@ -197,29 +131,5 @@ public abstract class CentralManagement {
 
     public static ArrayList<Student> getAllStudents() {
         return allStudents;
-    }
-
-    public static ArrayList<Employee> getSaturday() {
-        return saturday;
-    }
-
-    public static ArrayList<Employee> getSunday() {
-        return sunday;
-    }
-
-    public static ArrayList<Employee> getMonday() {
-        return monday;
-    }
-
-    public static ArrayList<Employee> getTuesday() {
-        return tuesday;
-    }
-
-    public static ArrayList<Employee> getWednesday() {
-        return wednesday;
-    }
-
-    public static ArrayList<Employee> getThursday() {
-        return thursday;
     }
 }

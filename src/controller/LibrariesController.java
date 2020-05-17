@@ -217,17 +217,14 @@ public class LibrariesController {
             if (libraries == Libraries.CENTRAL_LIBRARY && employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
                 CentralLibrary.getInstance().changeEmployeeSchedule(nationalCode, schedule);
                 CentralManagement.refreshWorkersSchedule();
-                CentralManagement.setWorkersTime();
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else if (libraries == Libraries.LIBRARY_A && employee.getWorkPlace() == Libraries.LIBRARY_A) {
                 LibraryB.getInstance().changeEmployeeSchedule(nationalCode, schedule);
                 CentralManagement.refreshWorkersSchedule();
-                CentralManagement.setWorkersTime();
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else if (libraries == Libraries.LIBRARY_B && employee.getWorkPlace() == Libraries.LIBRARY_B) {
                 LibraryB.getInstance().changeEmployeeSchedule(nationalCode, schedule);
                 CentralManagement.refreshWorkersSchedule();
-                CentralManagement.setWorkersTime();
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else {
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WRONG_LIBRARY);
@@ -673,7 +670,7 @@ public class LibrariesController {
     }
 
     private void setGiveBackStoreString(Person person, Book book, MyTime time, MyDate sellDate, int newPrice) {
-        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), time.getHour());
+        Employee employee = CentralManagement.getWorkerByTime(Libraries.CENTRAL_LIBRARY, calcWeekDay(currentDay), time.getHour());
         String string;
         String key;
         if (person.getType() == Type.PROFESSOR) {
@@ -701,7 +698,7 @@ public class LibrariesController {
     }
 
     private void setSellBookStringForStudent(Student student, Book book, int price, MyTime time) {
-        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), time.getHour());
+        Employee employee = CentralManagement.getWorkerByTime(Libraries.CENTRAL_LIBRARY, calcWeekDay(currentDay), time.getHour());
         String string = book.getBookDetails() + ", Student, " + student.getStudentId() + ", " + currentDay +
                 ", " + price;
         String help;
@@ -715,7 +712,7 @@ public class LibrariesController {
     }
 
     private void setSellBookStringForProfessor(Professor professor, Book book, int price, MyTime time) {
-        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), time.getHour());
+        Employee employee = CentralManagement.getWorkerByTime(Libraries.CENTRAL_LIBRARY, calcWeekDay(currentDay), time.getHour());
         String string = book.getBookDetails() + ", Professor, " + professor.getNationalCode() + ", " + currentDay +
                 ", " + price;
         String help;
@@ -774,7 +771,7 @@ public class LibrariesController {
 
     private String setGiveBackBookString(Person person, Book book, MyTime time, String loanDate, String giveBackDate) {
         String string;
-        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), time.getHour());
+        Employee employee = CentralManagement.getWorkerByTime(book.getBookPlace(), calcWeekDay(currentDay), time.getHour());
         if (person.getType() == Type.PROFESSOR) {
             Student student = (Student) person;
             string = book.getBookDetails() + ", Student, " + student.getStudentId() + ", " + loanDate + ", " +
@@ -849,7 +846,7 @@ public class LibrariesController {
     }
 
     private void setLoanBookStringForStudent(int studentId, Book book, MyTime loanTime, MyDate giveBackDate) {
-        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), loanTime.getHour());
+        Employee employee = CentralManagement.getWorkerByTime(book.getBookPlace(), calcWeekDay(currentDay), loanTime.getHour());
         String string = book.getBookDetails() + ", Student, " + studentId +
                 ", " + currentDay + ", " + loanTime + ", " + giveBackDate;
         String help;
@@ -865,7 +862,7 @@ public class LibrariesController {
     }
 
     private void setLoanBookStringForProfessor(long nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
-        Employee employee = CentralManagement.getWorkerByTime(calcWeekDay(currentDay), loanTime.getHour());
+        Employee employee = CentralManagement.getWorkerByTime(book.getBookPlace(), calcWeekDay(currentDay), loanTime.getHour());
         String string = book.getBookDetails() + ", Professor, " + nationalCode +
                 ", " + currentDay + ", " + loanTime + ", " + giveBackDate;
         String help;

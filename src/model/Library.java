@@ -4,6 +4,7 @@ import controller.MyDate;
 import enums.AddBook;
 import enums.WeekDays;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface Library {
@@ -20,5 +21,7 @@ public interface Library {
     void changeEmployeeSchedule(long nationalCode, List<WeekDays> newSchedule);
     void setFineForDelay(MyDate currentDay, int addDay);
     Book search(Book book);
+    Employee getWorkerByTime(WeekDays day, int hour);
+    void refreshWorkersSchedule();
 
 }

@@ -77,32 +77,7 @@ public class ShowProgramDetails {
     }
 
     private static void workersSchedule() {
-        System.out.println("Workers on saturday :");
-        for (Employee employee : CentralManagement.getSaturday()) {
-            System.out.println(employee);
-        }
-        System.out.println("Workers on sunday :");
-        for (Employee employee : CentralManagement.getSunday()) {
-            System.out.println(employee);
-        }
-        System.out.println("Workers on monday :");
-        for (Employee employee : CentralManagement.getMonday()) {
-            System.out.println(employee);
-        }
-        System.out.println("Workers on tuesday :");
-        for (Employee employee : CentralManagement.getTuesday()) {
-            System.out.println(employee);
-        }
-        System.out.println("Workers on wednesday :");
-        for (Employee employee : CentralManagement.getWednesday()) {
-            System.out.println(employee);
-        }
-        System.out.println("Workers on thursday :");
-        for (Employee employee : CentralManagement.getThursday()) {
-            System.out.println(employee);
-        }
-        divide();
-        divide();
+        System.out.println("Nothing yet");
     }
 
     private static void divide() {
@@ -272,7 +247,6 @@ public class ShowProgramDetails {
         for (Employee employee : CentralManagement.allActiveEmployees) {
             System.out.println(employee);
             System.out.println(employee.getWorkingDays());
-            System.out.println(employee.getWorkTime().keySet());
         }
     }
 }
