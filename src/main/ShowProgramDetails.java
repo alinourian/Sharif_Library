@@ -17,6 +17,7 @@ public class ShowProgramDetails {
             String command = scanner.nextLine();
             if (command.equalsIgnoreCase("4") ||
                     command.equalsIgnoreCase("back to program")) {
+                System.out.println("Well, go on...");
                 break;
             } else if (command.equalsIgnoreCase("1") ||
                     command.equalsIgnoreCase("objects details")) {

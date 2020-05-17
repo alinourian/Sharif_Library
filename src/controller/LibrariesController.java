@@ -190,7 +190,7 @@ public class LibrariesController {
     }
 
     public void depositStudent(int studentId, long increase) {
-        Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
+        Student student = CentralManagement.getStudentByStudentIdInAllStudents(studentId);
         if (student == null) {
             ConsoleViewOut.depositFailed();
         } else {
@@ -200,7 +200,7 @@ public class LibrariesController {
     }
 
     public void depositProfessor(long nationalCode, long increase) {
-        Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
+        Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
         if (professor == null) {
             ConsoleViewOut.depositFailed();
         } else {
@@ -216,12 +216,18 @@ public class LibrariesController {
         } else {
             if (libraries == Libraries.CENTRAL_LIBRARY && employee.getWorkPlace() == Libraries.CENTRAL_LIBRARY) {
                 CentralLibrary.getInstance().changeEmployeeSchedule(nationalCode, schedule);
+                CentralManagement.refreshWorkersSchedule();
+                CentralManagement.setWorkersTime();
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
-            } else if (libraries == Libraries.LIBRARY_A) {
+            } else if (libraries == Libraries.LIBRARY_A && employee.getWorkPlace() == Libraries.LIBRARY_A) {
                 LibraryB.getInstance().changeEmployeeSchedule(nationalCode, schedule);
+                CentralManagement.refreshWorkersSchedule();
+                CentralManagement.setWorkersTime();
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
-            } else if (libraries == Libraries.LIBRARY_B) {
+            } else if (libraries == Libraries.LIBRARY_B && employee.getWorkPlace() == Libraries.LIBRARY_B) {
                 LibraryB.getInstance().changeEmployeeSchedule(nationalCode, schedule);
+                CentralManagement.refreshWorkersSchedule();
+                CentralManagement.setWorkersTime();
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else {
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WRONG_LIBRARY);

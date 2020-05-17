@@ -131,7 +131,7 @@ public abstract class CentralManagement {
         return  day.get(worker);
     }
 
-    private static void refreshWorkersSchedule() {
+    public static void refreshWorkersSchedule() {
         for (Employee activeEmployee : allActiveEmployees) {
             if (activeEmployee.getWorkingDays().contains(WeekDays.SATURDAY)) {
                 saturday.add(activeEmployee);
@@ -149,7 +149,7 @@ public abstract class CentralManagement {
         }
     }
 
-    private static void setWorkersTime() {
+    public static void setWorkersTime() {
         try {
             int saturdayShift = 12 / saturday.size();
             int sundayShift = 12 / sunday.size();
@@ -197,10 +197,6 @@ public abstract class CentralManagement {
 
     public static ArrayList<Student> getAllStudents() {
         return allStudents;
-    }
-
-    public static List<Book> getAllBooksEverExist() {
-        return allBooksEverExist;
     }
 
     public static ArrayList<Employee> getSaturday() {
