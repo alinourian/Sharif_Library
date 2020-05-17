@@ -486,11 +486,11 @@ public class LibrariesController {
         if (book == null) {
             ConsoleViewOut.addBookToStore(0);
         } else {
-            if (CentralLibrary.getInstance().getBooksForSell().contains(book)) {
+            if (CentralLibrary.getInstance().getBooksForSale().contains(book)) {
                 ConsoleViewOut.addBookToStore(-1);
             } else {
                 CentralLibrary.getInstance().addToStore(book);
-                CentralLibrary.getInstance().getBooksForSell().add(book);
+                CentralLibrary.getInstance().getBooksForSale().add(book);
                 ConsoleViewOut.addBookToStore(1);
             }
         }
@@ -596,7 +596,7 @@ public class LibrariesController {
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_EXIST);
             return;
         }
-        if (!CentralLibrary.getInstance().getBooksForSell().contains(book)) {
+        if (!CentralLibrary.getInstance().getBooksForSale().contains(book)) {
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_FOR_SAIL);
             return;
         }
@@ -621,7 +621,7 @@ public class LibrariesController {
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_EXIST);
             return;
         }
-        if (!CentralLibrary.getInstance().getBooksForSell().contains(book)) {
+        if (!CentralLibrary.getInstance().getBooksForSale().contains(book)) {
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_FOR_SAIL);
             return;
         }

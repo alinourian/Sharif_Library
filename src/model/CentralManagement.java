@@ -198,4 +198,32 @@ public abstract class CentralManagement {
     public static ArrayList<Student> getAllStudents() {
         return allStudents;
     }
+
+    public static List<Book> getAllBooksEverExist() {
+        return allBooksEverExist;
+    }
+
+    public static ArrayList<Employee> getSaturday() {
+        return saturday;
+    }
+
+    public static ArrayList<Employee> getSunday() {
+        return sunday;
+    }
+
+    public static ArrayList<Employee> getMonday() {
+        return monday;
+    }
+
+    public static ArrayList<Employee> getTuesday() {
+        return tuesday;
+    }
+
+    public static ArrayList<Employee> getWednesday() {
+        return wednesday;
+    }
+
+    public static ArrayList<Employee> getThursday() {
+        return thursday;
+    }
 }

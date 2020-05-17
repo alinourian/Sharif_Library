@@ -23,7 +23,7 @@ public class CentralLibrary implements Library {
     //store properties...
     private String discountCode;
     private int discountPercent;
-    private ArrayList<Book> booksForSell;
+    private ArrayList<Book> booksForSale;
     private HashMap<String, String> booksSold;//used in controller
     private HashMap<String, String> booksGiveBack;// ...
     //....
@@ -42,7 +42,7 @@ public class CentralLibrary implements Library {
         borrowedBooks = new HashMap<>();
         discountCode = "NoDiscount";
         discountPercent = 0;
-        booksForSell = new ArrayList<>();
+        booksForSale = new ArrayList<>();
         booksSold = new HashMap<>();
         booksGiveBack = new HashMap<>();
     }
@@ -176,7 +176,7 @@ public class CentralLibrary implements Library {
     }
 
     public void addToStore(Book book) {
-        booksForSell.add(book);
+        booksForSale.add(book);
     }
 
     public void setDiscountCode(String code, int percent) {
@@ -231,8 +231,8 @@ public class CentralLibrary implements Library {
         return discountPercent;
     }
 
-    public ArrayList<Book> getBooksForSell() {
-        return booksForSell;
+    public ArrayList<Book> getBooksForSale() {
+        return booksForSale;
     }
 
     public HashMap<String, String> getBooksSold() {

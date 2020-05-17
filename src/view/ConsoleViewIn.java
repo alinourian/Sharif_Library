@@ -1,6 +1,6 @@
 package view;
 
-import main.AtTheEnd;
+import main.ShowProgramDetails;
 
 import java.util.Scanner;
 
@@ -79,9 +79,9 @@ public abstract class ConsoleViewIn {
             } else if (ConsoleCommands.NEXT_DAY.getMatcher(command).matches()) {//20
                 SplitCommand.goNextDay(command);
                 System.out.println("\n");
-            } else if (command.equalsIgnoreCase("show all details") ||
-            command.equalsIgnoreCase("000")) {//0000 test
-                AtTheEnd.run();
+            } else if (command.equalsIgnoreCase("show details") ||
+                    command.equalsIgnoreCase("000")) {//0000 test
+                ShowProgramDetails.run();
             } else {//21
                 System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!\n");
             }
@@ -89,4 +89,7 @@ public abstract class ConsoleViewIn {
         System.out.println("Program has finished! Good luck;)");
     }
 
+    public static Scanner getScanner() {
+        return scanner;
+    }
 }
