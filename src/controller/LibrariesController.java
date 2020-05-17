@@ -493,7 +493,6 @@ public class LibrariesController {
                 ConsoleViewOut.addBookToStore(-1);
             } else {
                 CentralLibrary.getInstance().addToStore(book);
-                CentralLibrary.getInstance().getBooksForSale().add(book);
                 ConsoleViewOut.addBookToStore(1);
             }
         }
@@ -641,8 +640,8 @@ public class LibrariesController {
         String string = "" + student.getStudentId() + "" + book.getISBN();
         String[] splitDetails;
         splitDetails = CentralLibrary.getInstance().getBooksSold().get(string).split(",");
-        MyDate sellDate = setDayByString(splitDetails[5].trim());
-        int price = Integer.parseInt(splitDetails[6].trim());
+        MyDate sellDate = setDayByString(splitDetails[4].trim());
+        int price = Integer.parseInt(splitDetails[5].trim());
         int dayPassed = daysPassed(currentDay, sellDate);
         if (dayPassed > 5) { //Can't give back
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.CANNOT_GIVE_BACK);
@@ -657,8 +656,8 @@ public class LibrariesController {
         String string = "" + professor.getNationalCode() + "" + book.getISBN();
         String[] splitDetails;
         splitDetails = CentralLibrary.getInstance().getBooksSold().get(string).split(",");
-        MyDate sellDate = setDayByString(splitDetails[5].trim());
-        int price = Integer.parseInt(splitDetails[6].trim());
+        MyDate sellDate = setDayByString(splitDetails[4].trim());
+        int price = Integer.parseInt(splitDetails[5].trim());
         int dayPassed = daysPassed(currentDay, sellDate);
         if (dayPassed > 5) { //Can't give back
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.CANNOT_GIVE_BACK);
@@ -676,20 +675,26 @@ public class LibrariesController {
         if (person.getType() == Type.PROFESSOR) {
             Professor professor = (Professor)person;
             string = book.getBookDetails() + ", Professor, " + professor.getNationalCode() + ", " +
-            sellDate + ", " + currentDay + ", " + newPrice + ", " + employee.getFullName();
+            sellDate + ", " + currentDay + ", " + newPrice;
             key = "" + professor.getNationalCode() + "" + book.getISBN();
         } else { //Student
             Student student = (Student)person;
             string = book.getBookDetails() + ", Student, " + student.getStudentId() + ", " +
-                    sellDate + ", " + currentDay + ", " + newPrice + ", " + employee.getFullName();
+                    sellDate + ", " + currentDay + ", " + newPrice;
             key = "" + student.getStudentId() + "" + book.getISBN();
         }
-        CentralLibrary.getInstance().getBooksGiveBack().put(key, string);
+        String help;
+        try {
+            help = ", " + employee.getFullName();
+        } catch (NullPointerException e) {
+            help = ", -";
+        }
+        CentralLibrary.getInstance().getBooksGiveBack().put(key, string + help);
     }
 
-    private MyDate setDayByString(String time) {
+    public MyDate setDayByString(String date) {
         MyDate myDate;
-        String[] help = time.split("/");
+        String[] help = date.split("/");
         int year = Integer.parseInt(help[0].trim());
         int month = Integer.parseInt(help[1].trim());
         int day = Integer.parseInt(help[2].trim());
@@ -705,7 +710,7 @@ public class LibrariesController {
         try {
             help = ", " + employee.getFullName();
         } catch (NullPointerException e) {
-            help = "-";
+            help = ", -";
         }
         String key = "" + student.getStudentId() + "" + book.getISBN();
         CentralLibrary.getInstance().getBooksSold().put(key, string + help);
@@ -719,7 +724,7 @@ public class LibrariesController {
         try {
             help = ", " + employee.getFullName();
         } catch (NullPointerException e) {
-            help = "-";
+            help = ", -";
         }
         String key = "" + professor.getNationalCode() + "" + book.getISBN();
         CentralLibrary.getInstance().getBooksSold().put(key, string + help);
@@ -772,7 +777,7 @@ public class LibrariesController {
     private String setGiveBackBookString(Person person, Book book, MyTime time, String loanDate, String giveBackDate) {
         String string;
         Employee employee = CentralManagement.getWorkerByTime(book.getBookPlace(), calcWeekDay(currentDay), time.getHour());
-        if (person.getType() == Type.PROFESSOR) {
+        if (person.getType() == Type.STUDENT) {
             Student student = (Student) person;
             string = book.getBookDetails() + ", Student, " + student.getStudentId() + ", " + loanDate + ", " +
                     giveBackDate + ", " + currentDay + ", " + time;
@@ -786,7 +791,7 @@ public class LibrariesController {
         try {
             help = ", " + employee.getFullName();
         } catch (NullPointerException e) {
-            help = "-";
+            help = ", -";
         }
         return string + help;
     }
@@ -853,7 +858,7 @@ public class LibrariesController {
         try {
             help = ", " + employee.getFullName();
         } catch (NullPointerException e) {
-            help = "-";
+            help = ", -";
         }
         Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
         assert student != null;
@@ -869,7 +874,7 @@ public class LibrariesController {
         try {
             help = ", " + employee.getFullName();
         } catch (NullPointerException e) {
-            help = "-";
+            help = ", -";
         }
         CentralManagement.allBorrowedBooks.put("" + nationalCode + "" + book.getISBN() , string + help);
         book.getBorrowers().put(CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode), giveBackDate);
@@ -901,7 +906,7 @@ public class LibrariesController {
 
     public int daysPassed(MyDate date, MyDate fromDate) {//if kab is 3 years after now!
         int dayPassed1 = fromDate.getMonth() > 6 ?  (fromDate.getMonth() - 7) * 30 + 186 + fromDate.getDay() - 1 :
-                (fromDate.getMonth() - 1) * 31 + fromDate.getDay() - 1;
+                (fromDate.getMonth() - 1) * 31 + fromDate.getDay();
         int year = date.getYear() - fromDate.getYear();
         //int daysOfFourYearsHappens = (year / 4) * 1461;
         //int daysOfRestYears = ((year % 4) * 365);

@@ -89,14 +89,14 @@ public class ShowProgramDetails {
     private static void showAllBorrowedBooks() {
         System.out.println("All borrowed books :");
         for (String string : CentralManagement.allBorrowedBooks.keySet()) {
-            System.out.println(string);
+            System.out.println(CentralManagement.allBorrowedBooks.get(string));
         }
     }
 
     private static void showAllReturnedBooks() {
         System.out.println("All returned books :");
         for (String string : CentralManagement.allReturnedBooks.keySet()) {
-            System.out.println(string);
+            System.out.println(CentralManagement.allReturnedBooks.get(string));
         }
     }
 
@@ -152,14 +152,14 @@ public class ShowProgramDetails {
     private static void showBooksSoled() {
         System.out.println("Books soled: ");
         for (String string : CentralLibrary.getInstance().getBooksSold().keySet()) {
-            System.out.println(string);
+            System.out.println(CentralLibrary.getInstance().getBooksSold().get(string));
         }
     }
 
     private static void showBooksGiveBackToStore() {
         System.out.println("Books returned to store :");
         for (String string : CentralLibrary.getInstance().getBooksGiveBack().keySet()) {
-            System.out.println(string);
+            System.out.println(CentralLibrary.getInstance().getBooksGiveBack().get(string));
         }
     }
 
