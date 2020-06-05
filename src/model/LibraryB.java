@@ -44,14 +44,23 @@ public class LibraryB implements Library {
 
     @Override
     public Book search(Book book) {
+        if (book.getTranslatorName() == null) book.setTranslatorName("");
+        ArrayList<Book> sameBooks = new ArrayList<>();
         for(Book test : books.keySet()) {
             if(test.getWriter().equalsIgnoreCase(book.getWriter())) {
                 if(test.getPublishedYear() == book.getPublishedYear()) {
-                    if(test.getTranslatorName().equalsIgnoreCase(book.getTranslatorName())) {
-                        return test;
-                    }
+                    sameBooks.add(test);
                 }
             }
+        }
+        if (sameBooks.size() > 1) {
+            for (Book sameBook : sameBooks) {
+                if (sameBook.getTranslatorName().equalsIgnoreCase(book.getTranslatorName())) {
+                    return sameBook;
+                }
+            }
+        } else if (sameBooks.size() == 1) {
+            return sameBooks.get(0);
         }
         return null;
     }
@@ -72,7 +81,8 @@ public class LibraryB implements Library {
             return AddBook.NEW_ADDED_SUCCESSFULLY;//New book has successfully added to this library.
         } else if (test.getBookPlace() == Libraries.LIBRARY_B) {
             if (test.getNumbersAvailable() - books.get(test) == 0) {
-                return AddBook.NO_OTHER_BOOK_TO_ADD;
+            //    return AddBook.NO_OTHER_BOOK_TO_ADD;
+                  book.setNumbersAvailable(book.getNumbersAvailable() + 1);
             }
             books.replace(test, books.get(test)+1);
             CentralManagement.allBooksInLibraries.replace(test, books.get(test)+1);
@@ -176,7 +186,7 @@ public class LibraryB implements Library {
         tuesday.clear();
         wednesday.clear();
         thursday.clear();
-        for (Employee activeEmployee : CentralManagement.allActiveEmployees) {
+        for (Employee activeEmployee : employees) {
             if (activeEmployee.getWorkingDays().contains(WeekDays.SATURDAY)) {
                 saturday.add(activeEmployee);
             } if (activeEmployee.getWorkingDays().contains(WeekDays.SUNDAY)) {

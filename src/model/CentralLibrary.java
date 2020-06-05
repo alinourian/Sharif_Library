@@ -82,7 +82,8 @@ public class CentralLibrary implements Library {
             return AddBook.NEW_ADDED_SUCCESSFULLY;//New book has successfully added to this library.
         } else if (test.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
             if (test.getNumbersAvailable() == books.get(test)) {
-                return AddBook.NO_OTHER_BOOK_TO_ADD;
+                //return AddBook.NO_OTHER_BOOK_TO_ADD;
+                book.setNumbersAvailable(book.getNumbersAvailable() + 1);
             }
             books.replace(test, books.get(test)+1);
             CentralManagement.allBooksInLibraries.replace(test, books.get(test)+1);
@@ -210,7 +211,7 @@ public class CentralLibrary implements Library {
         tuesday.clear();
         wednesday.clear();
         thursday.clear();
-        for (Employee activeEmployee : CentralManagement.allActiveEmployees) {
+        for (Employee activeEmployee : libraryEmployees) {
             if (activeEmployee.getWorkingDays().contains(WeekDays.SATURDAY)) {
                 saturday.add(activeEmployee);
             } if (activeEmployee.getWorkingDays().contains(WeekDays.SUNDAY)) {

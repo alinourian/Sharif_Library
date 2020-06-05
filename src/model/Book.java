@@ -120,6 +120,10 @@ public class Book {
         return borrowers;
     }
 
+    public void setTranslatorName(String translatorName) {
+        this.translatorName = translatorName;
+    }
+
     @Override
     public String toString() {
         return "Book{" +

@@ -32,7 +32,7 @@ public abstract class SplitCommand {
                 controller.createBook(matcher.group(1), Integer.parseInt(matcher.group(2)),
                         Integer.parseInt(matcher.group(3)), matcher.group(4),
                         matcher.group(5), Long.parseLong(matcher.group(6)),
-                        Integer.parseInt(matcher.group(7)), matcher.group(8));
+                        Integer.parseInt(matcher.group(7)), matcher.group(8).trim());
             }
         }
     }
@@ -126,7 +126,7 @@ public abstract class SplitCommand {
         Matcher matcher = ConsoleCommands.SET_SCHEDULE.getMatcher(command);
         if (matcher.find()) {
             ArrayList<WeekDays> schedule = new ArrayList<>();
-            long nationalCode = Integer.parseInt(matcher.group(1));
+            long nationalCode = Long.parseLong(matcher.group(1));
             Libraries libraries = setLibrary(matcher.group(2));
             if (libraries != null) {
                 for (int i = 0; i < 6; i++) {
@@ -173,24 +173,36 @@ public abstract class SplitCommand {
                     }
                 } else if (matcher.group(5).equalsIgnoreCase("LibraryA") ||
                         matcher.group(5).equalsIgnoreCase("A")) {
+                    String translator;
+                    if (matcher.group(4) == null) {
+                        translator = "";
+                    } else {
+                        translator = matcher.group(4).trim();
+                    }
                     if (matcher.group(6).equalsIgnoreCase("student")) {
                         controller.loanBookInLibrary_A_B_ForStudent(matcher.group(1),
-                                Integer.parseInt(matcher.group(2)), matcher.group(3),
+                                Integer.parseInt(matcher.group(2)), translator,
                                 Libraries.LIBRARY_A, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
                     } else {
                         controller.loanBookInLibrary_A_B_ForProfessor(matcher.group(1),
-                                Integer.parseInt(matcher.group(2)), matcher.group(3),
+                                Integer.parseInt(matcher.group(2)), translator,
                                 Libraries.LIBRARY_A, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
                     }
                 } else if (matcher.group(5).equalsIgnoreCase("LibraryB") ||
                         matcher.group(5).equalsIgnoreCase("B")) {
+                    String translator;
+                    if (matcher.group(4) == null) {
+                        translator = "";
+                    } else {
+                        translator = matcher.group(4).trim();
+                    }
                     if (matcher.group(6).equalsIgnoreCase("student")) {
                         controller.loanBookInLibrary_A_B_ForStudent(matcher.group(1),
-                                Integer.parseInt(matcher.group(2)), matcher.group(3),
+                                Integer.parseInt(matcher.group(2)), translator,
                                 Libraries.LIBRARY_B, Integer.parseInt(matcher.group(7)), loanTime, giveBackDate);
                     } else {
                         controller.loanBookInLibrary_A_B_ForProfessor(matcher.group(1),
-                                Integer.parseInt(matcher.group(2)), matcher.group(3),
+                                Integer.parseInt(matcher.group(2)), translator,
                                 Libraries.LIBRARY_B, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
                     }
                 }
@@ -217,11 +229,11 @@ public abstract class SplitCommand {
                 } else if (matcher.group(5).equalsIgnoreCase("libraryA") ||
                         matcher.group(5).equalsIgnoreCase("A")) {
                     library = Libraries.LIBRARY_A;
-                    book = new Book(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3));
+                    book = new Book(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(4));
                 } else if (matcher.group(5).equalsIgnoreCase("libraryB") ||
                         matcher.group(5).equalsIgnoreCase("B")) {
                     library = Libraries.LIBRARY_B;
-                    book = new Book(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(3));
+                    book = new Book(matcher.group(1), Integer.parseInt(matcher.group(2)), matcher.group(4));
                 } else {
                     book = new Book();
                     library = Libraries.NO_WHERE_YET;

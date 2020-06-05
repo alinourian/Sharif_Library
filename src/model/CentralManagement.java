@@ -108,7 +108,7 @@ public abstract class CentralManagement {
         int worker;
         try {
             shift = 12 / day.size();
-            worker = (hour - 8) / shift + 1;
+            worker = (hour - 8) / shift;
         } catch (ArithmeticException e) {
            return null;
         }

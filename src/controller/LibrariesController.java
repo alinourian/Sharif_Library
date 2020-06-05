@@ -219,7 +219,7 @@ public class LibrariesController {
                 CentralManagement.refreshWorkersSchedule();
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else if (libraries == Libraries.LIBRARY_A && employee.getWorkPlace() == Libraries.LIBRARY_A) {
-                LibraryB.getInstance().changeEmployeeSchedule(nationalCode, schedule);
+                LibraryA.getInstance().changeEmployeeSchedule(nationalCode, schedule);
                 CentralManagement.refreshWorkersSchedule();
                 ConsoleViewOut.setSchedule(nationalCode, SetSchedule.SUCCESSFUL);
             } else if (libraries == Libraries.LIBRARY_B && employee.getWorkPlace() == Libraries.LIBRARY_B) {
@@ -266,7 +266,7 @@ public class LibrariesController {
             Student student = CentralManagement.getStudentByStudentIdInAllActiveStudents(studentId);
             if (student == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
-            } else if (student.getBudget() <= 10000) {
+            } else if (student.getBudget() <= -10000) {
                 ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(ISBN, publishedYear);
@@ -288,7 +288,7 @@ public class LibrariesController {
             Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
             if (professor == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
-            } else if (professor.getBudget() <= 10000) {
+            } else if (professor.getBudget() <= -10000) {
                 ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(ISBN, publishedYear);
@@ -310,7 +310,7 @@ public class LibrariesController {
         if (library == Libraries.LIBRARY_A) {
             if (student == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
-            } else if (student.getBudget() <= 10000) {
+            } else if (student.getBudget() <= -10000) {
                 ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(bookNameOrWriter, publishedYear, translator);
@@ -324,11 +324,11 @@ public class LibrariesController {
         } else if (library == Libraries.LIBRARY_B) {
             if (student == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
-            } else if (student.getBudget() <= 10000) {
+            } else if (student.getBudget() <= -10000) {
                 ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(bookNameOrWriter, publishedYear, translator);
-                Book book = LibraryA.getInstance().search(test);
+                Book book = LibraryB.getInstance().search(test);
                 if (book == null) {
                     ConsoleViewOut.loanBookFailed(LoanBook.BOOK_NOT_FIND);
                 } else {
@@ -346,7 +346,7 @@ public class LibrariesController {
         if (library == Libraries.LIBRARY_A) {
             if (professor == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
-            } else if (professor.getBudget() <= 10000) {
+            } else if (professor.getBudget() <= -10000) {
                 ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(bookNameOrWriter, publishedYear, translator);
@@ -360,7 +360,7 @@ public class LibrariesController {
         } else if (library == Libraries.LIBRARY_B) {
             if (professor == null) {
                 ConsoleViewOut.loanBookFailed(LoanBook.PERSON_NOT_MEMBER);
-            } else if (professor.getBudget() <= 10000) {
+            } else if (professor.getBudget() <= -10000) {
                 ConsoleViewOut.loanBookFailed(LoanBook.BUDGET_NOT_ENOUGH);
             } else {
                 Book test = new Book(bookNameOrWriter, publishedYear, translator);
@@ -390,7 +390,9 @@ public class LibrariesController {
                     ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
                 }
             } else if (library == Libraries.LIBRARY_A) {
+                System.out.println(book);
                 Book test = LibraryA.getInstance().search(book);
+                System.out.println(test);
                 boolean bool = LibraryA.getInstance().getBorrowedBooks().containsKey(test);
                 if (bool) {
                     giveBackBook(student, test, time);
@@ -398,8 +400,8 @@ public class LibrariesController {
                     ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
                 }
             } else if (library == Libraries.LIBRARY_B) {
-                Book test = CentralLibrary.getInstance().search(book);
-                boolean bool = CentralLibrary.getInstance().getBorrowedBooks().containsKey(test);
+                Book test = LibraryB.getInstance().search(book);
+                boolean bool = LibraryB.getInstance().getBorrowedBooks().containsKey(test);
                 if (bool) {
                     giveBackBook(student, test, time);
                 } else {
@@ -435,8 +437,8 @@ public class LibrariesController {
                     ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
                 }
             } else if (library == Libraries.LIBRARY_B) {
-                Book test = CentralLibrary.getInstance().search(book);
-                boolean bool = CentralLibrary.getInstance().getBorrowedBooks().containsKey(test);
+                Book test = LibraryB.getInstance().search(book);
+                boolean bool = LibraryB.getInstance().getBorrowedBooks().containsKey(test);
                 if (bool) {
                     giveBackBook(professor, test, time);
                 } else {
@@ -485,7 +487,7 @@ public class LibrariesController {
     //methods for store...
     public void addBookToStore(String bookName, long ISBN, int publishedYear) {
         Book test = new Book(bookName, ISBN, publishedYear);
-        Book book = CentralManagement.searchBookInLibraries(test);
+        Book book = CentralManagement.searchBookInAllBooks(test);
         if (book == null) {
             ConsoleViewOut.addBookToStore(0);
         } else {
@@ -524,13 +526,13 @@ public class LibrariesController {
             if (available == 0) {
                 ConsoleViewOut.sellBook(SellBook.BOOK_NOT_AVAILABLE);
             } else {
-                boolean bool;
+                boolean bool = false;
                 if (Store.checkDiscountCode(discountCode)) {
                     bool = true;
                     ConsoleViewOut.checkDiscount(true);
-                } else {
-                    bool = false;
+                } else if (!discountCode.equals("-")) {
                     ConsoleViewOut.checkDiscount(false);
+                    return;
                 }
                 int price = CentralLibrary.getInstance().sellBook(book, bool);
                 if (Store.pay(student, price)) {
@@ -565,13 +567,13 @@ public class LibrariesController {
             if (available == 0) {
                 ConsoleViewOut.sellBook(SellBook.BOOK_NOT_AVAILABLE);
             } else {
-                boolean bool;
+                boolean bool = false;
                 if (Store.checkDiscountCode(discountCode)) {
                     bool = true;
                     ConsoleViewOut.checkDiscount(true);
-                } else {
-                    bool = false;
+                } else if (!discountCode.equals("-")) {
                     ConsoleViewOut.checkDiscount(false);
+                    return;
                 }
                 int price = CentralLibrary.getInstance().sellBook(book, bool);
                 if (Store.pay(professor, price)) {
@@ -905,12 +907,10 @@ public class LibrariesController {
     }
 
     public int daysPassed(MyDate date, MyDate fromDate) {//if kab is 3 years after now!
-        int dayPassed1 = fromDate.getMonth() > 6 ?  (fromDate.getMonth() - 7) * 30 + 186 + fromDate.getDay() - 1 :
+        int dayPassed1 = fromDate.getMonth() > 6 ?  (fromDate.getMonth() - 7) * 30 + 186 + fromDate.getDay() :
                 (fromDate.getMonth() - 1) * 31 + fromDate.getDay();
+
         int year = date.getYear() - fromDate.getYear();
-        //int daysOfFourYearsHappens = (year / 4) * 1461;
-        //int daysOfRestYears = ((year % 4) * 365);
-        //int daysOfYears = daysOfFourYearsHappens + daysOfRestYears;
         int daysOfYears = year * 365;
         int daysOfMonth = date.getMonth() > 6 ? (date.getMonth() - 7) * 30 + 186 : (date.getMonth() - 1) * 31;
         int days = date.getDay();

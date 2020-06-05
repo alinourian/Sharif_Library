@@ -26,8 +26,6 @@ public abstract class ConsoleViewOut {
                 System.err.println("An error happened in program!" +
                         "-View\\ConsoleViewOut\\addBook\\25-test-must-never-be-null");
                 System.out.println("Sorry! try again");
-            } else {
-                System.out.println("available: " + test.getNumbersAvailable());
             }
         } else if (status == AddBook.NEW_ADDED_SUCCESSFULLY) {
             System.out.println("You just successfully added a new book to this library.");
@@ -224,7 +222,7 @@ public abstract class ConsoleViewOut {
         if (bool)
             System.out.println("Discount-Code valid.");
         else
-            System.err.println("Discount-Code not valid!");
+            System.err.println("Discount-Code not valid! Try again!!");
     }
 
     public static void sellBook(SellBook sellBook) {

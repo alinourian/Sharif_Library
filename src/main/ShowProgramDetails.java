@@ -1,8 +1,10 @@
 package main;
 
+import enums.Libraries;
 import model.*;
 import view.ConsoleViewIn;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ShowProgramDetails {
@@ -77,7 +79,46 @@ public class ShowProgramDetails {
     }
 
     private static void workersSchedule() {
-        System.out.println("Nothing yet");
+        workerScheduleHelp1(Libraries.CENTRAL_LIBRARY);
+        divide();
+        workerScheduleHelp1(Libraries.LIBRARY_A);
+        divide();
+        workerScheduleHelp1(Libraries.LIBRARY_B);
+    }
+
+    private static void workerScheduleHelp1(Libraries library) {
+        System.out.println(library + " :");
+        if (library == Libraries.CENTRAL_LIBRARY) {
+            workerScheduleHelp2("saturday", CentralLibrary.getInstance().getSaturday());
+            workerScheduleHelp2("sunday", CentralLibrary.getInstance().getSunday());
+            workerScheduleHelp2("monday", CentralLibrary.getInstance().getMonday());
+            workerScheduleHelp2("tuesday", CentralLibrary.getInstance().getTuesday());
+            workerScheduleHelp2("wednesday", CentralLibrary.getInstance().getWednesday());
+            workerScheduleHelp2("thursday", CentralLibrary.getInstance().getThursday());
+        } else if (library == Libraries.LIBRARY_A) {
+            workerScheduleHelp2("saturday", LibraryA.getInstance().getSaturday());
+            workerScheduleHelp2("sunday", LibraryA.getInstance().getSunday());
+            workerScheduleHelp2("monday", LibraryA.getInstance().getMonday());
+            workerScheduleHelp2("tuesday", LibraryA.getInstance().getTuesday());
+            workerScheduleHelp2("wednesday", LibraryA.getInstance().getWednesday());
+            workerScheduleHelp2("thursday", LibraryA.getInstance().getThursday());
+        } else {
+            workerScheduleHelp2("saturday", LibraryB.getInstance().getSaturday());
+            workerScheduleHelp2("sunday", LibraryB.getInstance().getSunday());
+            workerScheduleHelp2("monday", LibraryB.getInstance().getMonday());
+            workerScheduleHelp2("tuesday", LibraryB.getInstance().getTuesday());
+            workerScheduleHelp2("wednesday", LibraryB.getInstance().getWednesday());
+            workerScheduleHelp2("thursday", LibraryB.getInstance().getThursday());
+        }
+
+    }
+
+    private static void workerScheduleHelp2(String string, ArrayList<Employee> day) {
+        System.out.println("* " + string + " :");
+        for (Employee employee : day) {
+            System.out.println(employee);
+        }
+        System.out.println();
     }
 
     private static void divide() {
@@ -246,7 +287,6 @@ public class ShowProgramDetails {
         System.out.println("Active employees are: ");
         for (Employee employee : CentralManagement.allActiveEmployees) {
             System.out.println(employee);
-            System.out.println(employee.getWorkingDays());
         }
     }
 }
