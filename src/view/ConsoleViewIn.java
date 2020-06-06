@@ -1,5 +1,6 @@
 package view;
 
+import controller.SaveDate;
 import main.ShowProgramDetails;
 
 import java.util.Scanner;
@@ -9,14 +10,19 @@ public abstract class ConsoleViewIn {
 
     public static void start() {
         System.out.println("Hi guy, Please set the date to start...");
+
         while (true) {
             String command = scanner.nextLine();
             if (ConsoleCommands.SET_DATE.getMatcher(command).matches()) {//0
                 SplitCommand.setDate(command);
-                System.out.println("21-Date has been set!\n");
                 break;
+            } else if (command.equals("file")) {
+                SplitCommand.setDate("Set Date 1398/08/17");
+                SaveDate.UploadFile();
+                break;
+            } else {
+                System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
             }
-            System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
         }
         while (true) {
             String command = scanner.nextLine();

@@ -3,19 +3,13 @@ package model;
 import enums.Libraries;
 import enums.Type;
 
+import java.util.HashMap;
+
 public abstract class Store {
+    private static HashMap<Book, Integer> booksForSale = new HashMap<>();
+
     public static void sellBook(Book book) {
-        if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
-            CentralLibrary.getInstance().setNumbersOfBooks(CentralLibrary.getInstance().getNumbersOfBooks() - 1);
-            CentralLibrary.getInstance().getBooks().replace(book, CentralLibrary.getInstance().getBooks().get(book) - 1);
-        } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
-            LibraryA.getInstance().setNumbersOfBooks(LibraryA.getInstance().getNumbersOfBooks() - 1);
-            LibraryA.getInstance().getBooks().replace(book, LibraryA.getInstance().getBooks().get(book) - 1);
-        } else { //LibraryB
-            LibraryB.getInstance().setNumbersOfBooks(LibraryB.getInstance().getNumbersOfBooks() - 1);
-            LibraryB.getInstance().getBooks().replace(book, LibraryB.getInstance().getBooks().get(book) - 1);
-        }
-        CentralManagement.allBooksInLibraries.replace(book, CentralManagement.allBooksInLibraries.get(book) - 1);
+        booksForSale.replace(book, booksForSale.get(book) - 1);
     }
 
     public static boolean pay(Person person, int price) {
@@ -36,16 +30,10 @@ public abstract class Store {
     }
 
     public static void giveBackBook(Book book) {
-        if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
-            CentralLibrary.getInstance().setNumbersOfBooks(CentralLibrary.getInstance().getNumbersOfBooks() + 1);
-            CentralLibrary.getInstance().getBooks().replace(book, CentralLibrary.getInstance().getBooks().get(book) + 1);
-        } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
-            LibraryA.getInstance().setNumbersOfBooks(LibraryA.getInstance().getNumbersOfBooks() + 1);
-            LibraryA.getInstance().getBooks().replace(book, LibraryA.getInstance().getBooks().get(book) + 1);
-        } else { //LibraryB
-            LibraryB.getInstance().setNumbersOfBooks(LibraryB.getInstance().getNumbersOfBooks() + 1);
-            LibraryB.getInstance().getBooks().replace(book, LibraryB.getInstance().getBooks().get(book) + 1);
-        }
-        CentralManagement.allBooksInLibraries.replace(book, CentralManagement.allBooksInLibraries.get(book) + 1);
+        booksForSale.replace(book, booksForSale.get(book) - 1);
+    }
+
+    public static HashMap<Book, Integer> getBooksForSale() {
+        return booksForSale;
     }
 }

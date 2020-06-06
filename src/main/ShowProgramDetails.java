@@ -78,6 +78,14 @@ public class ShowProgramDetails {
         divide();
     }
 
+    private static void divide() {
+        for (int i = 0; i <= 40; i++)
+            System.out.print("-");
+        System.out.println();
+    }
+
+    //WORKERS SCHEDULE
+
     private static void workersSchedule() {
         workerScheduleHelp1(Libraries.CENTRAL_LIBRARY);
         divide();
@@ -121,34 +129,30 @@ public class ShowProgramDetails {
         System.out.println();
     }
 
-    private static void divide() {
-        for (int i = 0; i <= 40; i++)
-            System.out.print("-");
-        System.out.println();
-    }
+    //BOOKS
 
     private static void showAllBorrowedBooks() {
-        System.out.println("All borrowed books :");
+        System.out.println("* All borrowed books :");
         for (String string : CentralManagement.allBorrowedBooks.keySet()) {
             System.out.println(CentralManagement.allBorrowedBooks.get(string));
         }
     }
 
     private static void showAllReturnedBooks() {
-        System.out.println("All returned books :");
+        System.out.println("* All returned books :");
         for (String string : CentralManagement.allReturnedBooks.keySet()) {
             System.out.println(CentralManagement.allReturnedBooks.get(string));
         }
     }
 
     private static void showCentralLibraryBorrowedBooks() {
-        System.out.println("Main-Library borrowed books :");
+        System.out.println("* Main-Library borrowed books :");
         for (Book book : CentralLibrary.getInstance().getBorrowedBooks().keySet()) {
             System.out.println(book);
-            System.out.println(CentralLibrary.getInstance().getBorrowedBooks().get(book));
+            System.out.println("  -  " + CentralLibrary.getInstance().getBorrowedBooks().get(book) +
+                    " numbers of this book have been loaned by these people :");
             for (Person person : book.getBorrowers().keySet()) {
-                System.out.println(person);
-                System.out.println(book.getBorrowers().get(person));
+                System.out.println("  -  " + person);
             }
             System.out.println();
             System.out.println();
@@ -156,13 +160,13 @@ public class ShowProgramDetails {
     }
 
     private static void showLibraryA_BorrowedBooks() {
-        System.out.println("LibraryA borrowed books :");
+        System.out.println("* LibraryA borrowed books :");
         for (Book book : LibraryA.getInstance().getBorrowedBooks().keySet()) {
             System.out.println(book);
-            System.out.println(LibraryA.getInstance().getBorrowedBooks().get(book));
+            System.out.println("  -  " + LibraryA.getInstance().getBorrowedBooks().get(book) +
+                    " numbers of this book have been loaned by these people :");
             for (Person person : book.getBorrowers().keySet()) {
-                System.out.println(person);
-                System.out.println(book.getBorrowers().get(person));
+                System.out.println("  -  " + person);
             }
             System.out.println();
             System.out.println();
@@ -170,13 +174,13 @@ public class ShowProgramDetails {
     }
 
     private static void showLibraryB_BorrowedBooks() {
-        System.out.println("LibraryB borrowed books :");
+        System.out.println("* LibraryB borrowed books :");
         for (Book book : LibraryB.getInstance().getBorrowedBooks().keySet()) {
             System.out.println(book);
-            System.out.println(LibraryB.getInstance().getBorrowedBooks().get(book));
+            System.out.println("  -  " + LibraryB.getInstance().getBorrowedBooks().get(book) +
+                    " numbers of this book have been loaned by these people :");
             for (Person person : book.getBorrowers().keySet()) {
-                System.out.println(person);
-                System.out.println(book.getBorrowers().get(person));
+                System.out.println("  -  " + person);
             }
             System.out.println();
             System.out.println();
@@ -184,42 +188,42 @@ public class ShowProgramDetails {
     }
 
     private static void showBooksForSale() {
-        System.out.println("Books for sale :");
+        System.out.println("** Books for sale **");
         for (Book book : CentralLibrary.getInstance().getBooksForSale()) {
             System.out.println(book);
         }
     }
 
     private static void showBooksSoled() {
-        System.out.println("Books soled: ");
+        System.out.println("* Books soled *");
         for (String string : CentralLibrary.getInstance().getBooksSold().keySet()) {
             System.out.println(CentralLibrary.getInstance().getBooksSold().get(string));
         }
     }
 
     private static void showBooksGiveBackToStore() {
-        System.out.println("Books returned to store :");
+        System.out.println("* Books returned to store *");
         for (String string : CentralLibrary.getInstance().getBooksGiveBack().keySet()) {
             System.out.println(CentralLibrary.getInstance().getBooksGiveBack().get(string));
         }
     }
 
     private static void showAllExistingBook() {
-        System.out.println("\nAll existing books are: ");
+        System.out.println("\n*** All existing books ***");
         for (Book book : CentralManagement.allBooksEverExist) {
             System.out.println(book);
         }
     }
 
     private static void showAllAvailableBooksInLibraries() {
-        System.out.println("Books available in libraries: ");
+        System.out.println("*** Books available in libraries ***");
         for (Book book : CentralManagement.allBooksInLibraries.keySet()) {
             System.out.println(book);
         }
     }
 
     private static void showBooksInCentralLibrary() {
-        System.out.println("Books are in Central-Library: ");
+        System.out.println("* Books are in Central-Library: ");
         for (Book book : CentralLibrary.getInstance().getBooks().keySet()) {
             System.out.println("Name: " + book.getBookName() + " - ISBN: " + book.getISBN() +
                     " - Existing: " + book.getNumbersAvailable() +
@@ -229,7 +233,7 @@ public class ShowProgramDetails {
     }
 
     private static void showBooksInLibraryA() {
-        System.out.println("Books are in Library-A: ");
+        System.out.println("* Books are in Library-A: ");
         for (Book book : LibraryA.getInstance().getBooks().keySet()) {
             System.out.println("Name: " + book.getBookName() + " - ISBN: " + book.getISBN() +
                     " - Existing: " + book.getNumbersAvailable() +
@@ -239,7 +243,7 @@ public class ShowProgramDetails {
     }
 
     private static void showBooksInLibraryB() {
-        System.out.println("Books are in Library-B: ");
+        System.out.println("* Books are in Library-B: ");
         for (Book book : LibraryB.getInstance().getBooks().keySet()) {
             System.out.println("Name: " + book.getBookName() + " - ISBN: " + book.getISBN() +
                     " - Existing: " + book.getNumbersAvailable() +
@@ -248,45 +252,48 @@ public class ShowProgramDetails {
         }
     }
 
+    //PERSONS
+
     private static void showAllStudents() {
-        System.out.println("All existing students are: ");
+        System.out.println("* All existing students are: ");
         for (Student student : CentralManagement.getAllStudents()) {
             System.out.println(student);
         }
     }
 
     private static void showAllActiveStudents() {
-        System.out.println("Active students are: ");
+        System.out.println("* Active students are: ");
         for (Student student : CentralManagement.allActiveStudents) {
             System.out.println(student);
         }
     }
 
     private static void showAllProfessors() {
-        System.out.println("All existing professors are: ");
+        System.out.println("* All existing professors are: ");
         for (Professor professor : CentralManagement.getAllProfessors()) {
             System.out.println(professor);
         }
     }
 
     private static void showAllActiveProfessors() {
-        System.out.println("Active professors are: ");
+        System.out.println("* Active professors are: ");
         for (Professor professor : CentralManagement.allActiveProfessors) {
             System.out.println(professor);
         }
     }
 
     private static void showAllWorkers() {
-        System.out.println("All existing employees are: ");
+        System.out.println("* All existing employees are: ");
         for (Employee employee : CentralManagement.getAllEmployees()) {
             System.out.println(employee);
         }
     }
 
     private static void showAllActiveWorkers() {
-        System.out.println("Active employees are: ");
+        System.out.println("* Active employees are: ");
         for (Employee employee : CentralManagement.allActiveEmployees) {
             System.out.println(employee);
         }
     }
+    //...
 }

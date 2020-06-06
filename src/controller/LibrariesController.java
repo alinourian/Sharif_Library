@@ -390,9 +390,7 @@ public class LibrariesController {
                     ConsoleViewOut.giveBackBook(GiveBackBook.BOOK_NOT_LOAN);
                 }
             } else if (library == Libraries.LIBRARY_A) {
-                System.out.println(book);
                 Book test = LibraryA.getInstance().search(book);
-                System.out.println(test);
                 boolean bool = LibraryA.getInstance().getBorrowedBooks().containsKey(test);
                 if (bool) {
                     giveBackBook(student, test, time);
@@ -509,39 +507,29 @@ public class LibrariesController {
                                   int studentId, MyTime time, String discountCode) {
         Student student = CentralManagement.getStudentByStudentIdInAllStudents(studentId);
         Book test = new Book(bookName, ISBN, publishedYear);
-        Book book = CentralManagement.searchBookInLibraries(test);
+        Book book = CentralLibrary.getInstance().searchBookInStore(test);
         if (student == null) {
             ConsoleViewOut.sellBook(SellBook.PERSON_NOT_EXIST);
         } else if (book == null) {
             ConsoleViewOut.sellBook(SellBook.BOOK_NOT_EXIST);
         } else {
-            int available;
-            if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
-                available = CentralLibrary.getInstance().getBooks().get(book);
-            } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
-                available = LibraryA.getInstance().getBooks().get(book);
-            } else { //LibraryB
-                available = LibraryB.getInstance().getBooks().get(book);
+            boolean bool = false;
+            if (Store.checkDiscountCode(discountCode)) {
+                bool = true;
+                ConsoleViewOut.checkDiscount(true);
+            } else if (!discountCode.equals("-")) {
+                ConsoleViewOut.checkDiscount(false);
+                return;
             }
-            if (available == 0) {
+            int price = CentralLibrary.getInstance().sellBook(book, bool);
+            if (Store.pay(student, price) && Store.getBooksForSale().get(book) > 0) {
+                Store.sellBook(book);
+                setSellBookStringForStudent(student, book, price, time);
+                ConsoleViewOut.sellBook(SellBook.SUCCESSFUL);
+            } else if (Store.getBooksForSale().get(book) == 0) {
                 ConsoleViewOut.sellBook(SellBook.BOOK_NOT_AVAILABLE);
             } else {
-                boolean bool = false;
-                if (Store.checkDiscountCode(discountCode)) {
-                    bool = true;
-                    ConsoleViewOut.checkDiscount(true);
-                } else if (!discountCode.equals("-")) {
-                    ConsoleViewOut.checkDiscount(false);
-                    return;
-                }
-                int price = CentralLibrary.getInstance().sellBook(book, bool);
-                if (Store.pay(student, price)) {
-                    Store.sellBook(book);
-                    setSellBookStringForStudent(student, book, price, time);
-                    ConsoleViewOut.sellBook(SellBook.SUCCESSFULL);
-                } else {
-                    ConsoleViewOut.sellBook(SellBook.BUDGET_NOT_ENOUGH);
-                }
+                ConsoleViewOut.sellBook(SellBook.BUDGET_NOT_ENOUGH);
             }
         }
     }
@@ -550,39 +538,29 @@ public class LibrariesController {
                                     long nationalCode, MyTime time, String discountCode) {
         Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
         Book test = new Book(bookName, ISBN, publishedYear);
-        Book book = CentralManagement.searchBookInLibraries(test);
+        Book book = CentralLibrary.getInstance().searchBookInStore(test);
         if (professor == null) {
             ConsoleViewOut.sellBook(SellBook.PERSON_NOT_EXIST);
         } else if (book == null) {
             ConsoleViewOut.sellBook(SellBook.BOOK_NOT_EXIST);
         } else {
-            int available;
-            if (book.getBookPlace() == Libraries.CENTRAL_LIBRARY) {
-                available = CentralLibrary.getInstance().getBooks().get(book);
-            } else if (book.getBookPlace() == Libraries.LIBRARY_A) {
-                available = LibraryA.getInstance().getBooks().get(book);
-            } else { //LibraryB
-                available = LibraryB.getInstance().getBooks().get(book);
+            boolean bool = false;
+            if (Store.checkDiscountCode(discountCode)) {
+                bool = true;
+                ConsoleViewOut.checkDiscount(true);
+            } else if (!discountCode.equals("-")) {
+                ConsoleViewOut.checkDiscount(false);
+                return;
             }
-            if (available == 0) {
+            int price = CentralLibrary.getInstance().sellBook(book, bool);
+            if (Store.pay(professor, price) && Store.getBooksForSale().get(book) > 0) {
+                Store.sellBook(book);
+                setSellBookStringForProfessor(professor, book, price, time);
+                ConsoleViewOut.sellBook(SellBook.SUCCESSFUL);
+            } else if (Store.getBooksForSale().get(book) == 0) {
                 ConsoleViewOut.sellBook(SellBook.BOOK_NOT_AVAILABLE);
             } else {
-                boolean bool = false;
-                if (Store.checkDiscountCode(discountCode)) {
-                    bool = true;
-                    ConsoleViewOut.checkDiscount(true);
-                } else if (!discountCode.equals("-")) {
-                    ConsoleViewOut.checkDiscount(false);
-                    return;
-                }
-                int price = CentralLibrary.getInstance().sellBook(book, bool);
-                if (Store.pay(professor, price)) {
-                    Store.sellBook(book);
-                    setSellBookStringForProfessor(professor, book, price, time);
-                    ConsoleViewOut.sellBook(SellBook.SUCCESSFULL);
-                } else {
-                    ConsoleViewOut.sellBook(SellBook.BUDGET_NOT_ENOUGH);
-                }
+                ConsoleViewOut.sellBook(SellBook.BUDGET_NOT_ENOUGH);
             }
         }
     }
@@ -595,7 +573,7 @@ public class LibrariesController {
             return;
         }
         Book test = new Book(bookName, ISBN, publishedYear);
-        Book book = CentralManagement.searchBookInLibraries(test);
+        Book book = CentralLibrary.getInstance().searchBookInStore(test);
         if (book == null) {
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_EXIST);
             return;
@@ -620,7 +598,7 @@ public class LibrariesController {
             return;
         }
         Book test = new Book(bookName, ISBN, publishedYear);
-        Book book = CentralManagement.searchBookInLibraries(test);
+        Book book = CentralLibrary.getInstance().searchBookInStore(test);
         if (book == null) {
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.BOOK_NOT_EXIST);
             return;

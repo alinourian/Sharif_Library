@@ -231,6 +231,11 @@ public class CentralLibrary implements Library {
     //store methods
     public void addToStore(Book book) {
         booksForSale.add(book);
+        if (Store.getBooksForSale().containsKey(book)) {
+            Store.getBooksForSale().replace(book, Store.getBooksForSale().get(book) + 1);
+        } else {
+            Store.getBooksForSale().put(book, 1);
+        }
     }
 
     public void setDiscountCode(String code, int percent) {
@@ -259,6 +264,17 @@ public class CentralLibrary implements Library {
             booksSold.remove("" + student.getStudentId() + "" + book.getISBN());
         }
         Store.giveBackBook(book);
+    }
+
+    public Book searchBookInStore(Book book) {
+        for(Book test : booksForSale) {
+            if(test.getISBN() == book.getISBN())  {
+                if(test.getPublishedYear() == book.getPublishedYear()) {
+                    return test;
+                }
+            }
+        }
+        return null;
     }
 
     //getters and setters
@@ -300,10 +316,6 @@ public class CentralLibrary implements Library {
 
     public void setNumbersOfBooks(int numbersOfBooks) {
         this.numbersOfBooks = numbersOfBooks;
-    }
-
-    public List<Employee> getStoreEmployees() {
-        return storeEmployees;
     }
 
     public ArrayList<Employee> getSaturday() {

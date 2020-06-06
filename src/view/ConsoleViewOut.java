@@ -226,16 +226,16 @@ public abstract class ConsoleViewOut {
     }
 
     public static void sellBook(SellBook sellBook) {
-        if (sellBook == SellBook.SUCCESSFULL) {
+        if (sellBook == SellBook.SUCCESSFUL) {
             System.out.println("You successfully bought the book.");
         } else if (sellBook == SellBook.PERSON_NOT_EXIST) {
             System.err.println("Person with this ID never exist!");
         } else if (sellBook == SellBook.BOOK_NOT_EXIST) {
             System.err.println("The book with this details does not found");
-        } else if (sellBook == SellBook.BOOK_NOT_AVAILABLE) {
-            System.err.println("Sorry! This book is not available now.");
         } else if (sellBook == SellBook.BUDGET_NOT_ENOUGH) {
             System.err.println("Sorry! Budget is not enough to buy!");
+        } else if (sellBook == SellBook.BOOK_NOT_AVAILABLE) {
+            System.err.println("Sorry! Book has finished yet! it must be add to store first.");
         }
     }
 
