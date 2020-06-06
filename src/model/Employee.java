@@ -13,7 +13,7 @@ public class Employee extends Person {
     private List<WeekDays> workingDays;
 
     public Employee(String fullName, int age,
-                    long nationalCode, Gender gender, Libraries workPlace) {
+                    String nationalCode, Gender gender, Libraries workPlace) {
         super(fullName, age, nationalCode, gender);
         this.workPlace = workPlace;
         workingDays = new ArrayList<>();

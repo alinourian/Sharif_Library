@@ -106,11 +106,11 @@ public abstract class ConsoleViewOut {
         System.err.println("Student with studentID \"" + studentId + "\" does not exist!");
     }
 
-    public static void addProfessorFailed(long nationalCode) {
+    public static void addProfessorFailed(String nationalCode) {
         System.err.println("Professor with national-code \"" + nationalCode + "\" does not exist!");
     }
 
-    public static void addEmployeeFailed(long nationalCode, AddWorker status) {
+    public static void addEmployeeFailed(String nationalCode, AddWorker status) {
         if (status == AddWorker.INVALID_NC) {
             System.err.println("Worker with national-code \"" + nationalCode + "\" does not exist!");
         } else if (status == AddWorker.LIBRARY_IS_FULL) {
@@ -121,7 +121,7 @@ public abstract class ConsoleViewOut {
         }
     }
 
-    public static void setSchedule(long nationalCode, SetSchedule status) {
+    public static void setSchedule(String nationalCode, SetSchedule status) {
         if (status == SetSchedule.WORKER_NOT_EXIST) {
             System.err.println("Sorry! Worker with national-code \"" + nationalCode +
                     "\" is not exist.");

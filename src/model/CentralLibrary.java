@@ -138,15 +138,15 @@ public class CentralLibrary implements Library {
     }
 
     @Override
-    public void changeEmployeeSchedule(long nationalCode, List<WeekDays> newSchedule) {
+    public void changeEmployeeSchedule(String nationalCode, List<WeekDays> newSchedule) {
         for (Employee libraryEmployee : libraryEmployees) {
-            if (libraryEmployee.nationalCode == nationalCode) {
+            if (libraryEmployee.nationalCode.equals(nationalCode)) {
                 libraryEmployee.updateWorkingDays(newSchedule);
                 return;
             }
         }
         for (Employee storeEmployee : storeEmployees) {
-            if (storeEmployee.nationalCode == nationalCode) {
+            if (storeEmployee.nationalCode.equals(nationalCode)) {
                 storeEmployee.updateWorkingDays(newSchedule);
                 return;
             }

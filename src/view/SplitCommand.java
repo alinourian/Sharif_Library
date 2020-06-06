@@ -50,7 +50,7 @@ public abstract class SplitCommand {
         if (matcher.find()) {
             Gender gender = setGender(matcher.group(4));
             controller.createStudent(matcher.group(1), Integer.parseInt(matcher.group(2)),
-                    Long.parseLong(matcher.group(3)), gender, Integer.parseInt(matcher.group(5)),
+                    matcher.group(3), gender, Integer.parseInt(matcher.group(5)),
                     Integer.parseInt(matcher.group(6)), matcher.group(7), Long.parseLong(matcher.group(8)),
                     matcher.group(9));
         }
@@ -61,7 +61,7 @@ public abstract class SplitCommand {
         if (matcher.find()) {
             Gender gender = setGender(matcher.group(4));
             controller.createProfessor(matcher.group(1), Integer.parseInt(matcher.group(2)),
-                    Long.parseLong(matcher.group(3)), gender, Integer.parseInt(matcher.group(5)),
+                    matcher.group(3), gender, Integer.parseInt(matcher.group(5)),
                     Long.parseLong(matcher.group(6)), matcher.group(7));
         }
     }
@@ -73,7 +73,7 @@ public abstract class SplitCommand {
             Libraries libraries = setLibrary(matcher.group(5));
             if (libraries != Libraries.NO_WHERE_YET) {
                 controller.createWorker(matcher.group(1), Integer.parseInt(matcher.group(2)),
-                        Long.parseLong(matcher.group(3)), gender, libraries);
+                        matcher.group(3), gender, libraries);
             } else {
                 System.err.println("Sorry! We can't create worker. Library is not found!");
             }
@@ -91,7 +91,7 @@ public abstract class SplitCommand {
     public static void depositProfessor(String command) {
         Matcher matcher = ConsoleCommands.DEPOSIT_PROFESSOR.getMatcher(command);
         if (matcher.find()) {
-            controller.depositProfessor(Long.parseLong(matcher.group(1)),
+            controller.depositProfessor(matcher.group(1),
                     Long.parseLong(matcher.group(2)));
         }
     }
@@ -106,7 +106,7 @@ public abstract class SplitCommand {
     public static void addProfessor(String command) {
         Matcher matcher = ConsoleCommands.ADD_PROFESSOR.getMatcher(command);
         if (matcher.find()) {
-            controller.addProfessor(Long.parseLong(matcher.group(1)));
+            controller.addProfessor(matcher.group(1));
         }
     }
 
@@ -115,7 +115,7 @@ public abstract class SplitCommand {
         if (matcher.find()) {
             Libraries libraries = setLibrary(matcher.group(2));
             if (libraries != null) {
-                controller.addEmployee(Long.parseLong(matcher.group(1)), libraries);
+                controller.addEmployee(matcher.group(1), libraries);
             } else {
                 System.err.println("Sorry! We can't create worker. Library is not found!");
             }
@@ -126,7 +126,7 @@ public abstract class SplitCommand {
         Matcher matcher = ConsoleCommands.SET_SCHEDULE.getMatcher(command);
         if (matcher.find()) {
             ArrayList<WeekDays> schedule = new ArrayList<>();
-            long nationalCode = Long.parseLong(matcher.group(1));
+            String nationalCode = matcher.group(1);
             Libraries libraries = setLibrary(matcher.group(2));
             if (libraries != null) {
                 for (int i = 0; i < 6; i++) {
@@ -146,7 +146,7 @@ public abstract class SplitCommand {
                 controller.findBookForStudent(Integer.parseInt(matcher.group(5)), matcher.group(1),
                         Long.parseLong(matcher.group(2)), Integer.parseInt(matcher.group(3)));
             } else if (matcher.group(4).equalsIgnoreCase("professor")) {
-                controller.findBookForProfessors(Long.parseLong(matcher.group(5)), matcher.group(1),
+                controller.findBookForProfessors(matcher.group(5), matcher.group(1),
                         Long.parseLong(matcher.group(2)), Integer.parseInt(matcher.group(3)));
             } else {
                 ConsoleViewOut.invalidCommands();
@@ -169,7 +169,7 @@ public abstract class SplitCommand {
                     } else {
                         controller.loanBookInCentralLibraryForProfessor(Long.parseLong(matcher.group(1)),
                                 Integer.parseInt(matcher.group(2)), Libraries.CENTRAL_LIBRARY,
-                                Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                                matcher.group(7), loanTime, giveBackDate);
                     }
                 } else if (matcher.group(5).equalsIgnoreCase("LibraryA") ||
                         matcher.group(5).equalsIgnoreCase("A")) {
@@ -186,7 +186,7 @@ public abstract class SplitCommand {
                     } else {
                         controller.loanBookInLibrary_A_B_ForProfessor(matcher.group(1),
                                 Integer.parseInt(matcher.group(2)), translator,
-                                Libraries.LIBRARY_A, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                                Libraries.LIBRARY_A, matcher.group(7), loanTime, giveBackDate);
                     }
                 } else if (matcher.group(5).equalsIgnoreCase("LibraryB") ||
                         matcher.group(5).equalsIgnoreCase("B")) {
@@ -203,7 +203,7 @@ public abstract class SplitCommand {
                     } else {
                         controller.loanBookInLibrary_A_B_ForProfessor(matcher.group(1),
                                 Integer.parseInt(matcher.group(2)), translator,
-                                Libraries.LIBRARY_B, Long.parseLong(matcher.group(7)), loanTime, giveBackDate);
+                                Libraries.LIBRARY_B, matcher.group(7), loanTime, giveBackDate);
                     }
                 }
             } catch (NumberFormatException e) {
@@ -220,7 +220,7 @@ public abstract class SplitCommand {
             Libraries library;
             Book book;
             int studentId;
-            long nationalCode;
+            String nationalCode;
             try {
                 if (matcher.group(5).equalsIgnoreCase("centralLibrary") ||
                         matcher.group(5).equalsIgnoreCase("mainLibrary")) {
@@ -242,7 +242,7 @@ public abstract class SplitCommand {
                     studentId = Integer.parseInt(matcher.group(7));
                     controller.giveBackBookFromStudent(book, library, studentId, time);
                 } else {
-                    nationalCode = Long.parseLong(matcher.group(7));
+                    nationalCode = matcher.group(7);
                     controller.giveBackBookFromProfessor(book, library, nationalCode, time);
                 }
             } catch (NumberFormatException e) {
@@ -289,7 +289,7 @@ public abstract class SplitCommand {
                         Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(5)), time, discountCode);
             } else { //professor
                 controller.sellBookToProfessor(matcher.group(1), Long.parseLong(matcher.group(2)),
-                        Integer.parseInt(matcher.group(3)), Long.parseLong(matcher.group(5)), time, discountCode);
+                        Integer.parseInt(matcher.group(3)), matcher.group(5), time, discountCode);
             }
         }
     }
@@ -303,7 +303,7 @@ public abstract class SplitCommand {
                         Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(5)), time);
             } else { //professor
                 controller.giveBackBookToStoreFromProfessor(matcher.group(1), Long.parseLong(matcher.group(2)),
-                        Integer.parseInt(matcher.group(3)), Long.parseLong(matcher.group(5)), time);
+                        Integer.parseInt(matcher.group(3)), matcher.group(5), time);
             }
         }
     }

@@ -129,9 +129,9 @@ public class LibraryB implements Library {
     }
 
     @Override
-    public void changeEmployeeSchedule(long nationalCode, List<WeekDays> newSchedule) {
+    public void changeEmployeeSchedule(String nationalCode, List<WeekDays> newSchedule) {
         for (Employee employee : employees) {
-            if (employee.nationalCode == nationalCode) {
+            if (employee.nationalCode.equals(nationalCode)) {
                 employee.updateWorkingDays(newSchedule);
                 break;
             }

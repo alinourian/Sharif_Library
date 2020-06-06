@@ -6,17 +6,17 @@ import enums.Type;
 public class Person {
     protected String FullName;
     protected int age;
-    protected long nationalCode;
+    protected String nationalCode;
     protected Gender gender;
 
-    public Person(String fullName, int age, long nationalCode, Gender gender) {
+    public Person(String fullName, int age, String nationalCode, Gender gender) {
         FullName = fullName;
         this.age = age;
         this.nationalCode = nationalCode;
         this.gender = gender;
     }
 
-    public long getNationalCode() {
+    public String getNationalCode() {
         return nationalCode;
     }
 

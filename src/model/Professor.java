@@ -8,7 +8,7 @@ public class Professor extends Person{
     private long budget;
     private String department;
 
-    public Professor(String fullName, int age, long nationalCode,
+    public Professor(String fullName, int age, String nationalCode,
                      Gender gender, int yearOfEntry, long budget, String department) {
         super(fullName, age, nationalCode, gender);
         this.yearOfEntry = yearOfEntry;

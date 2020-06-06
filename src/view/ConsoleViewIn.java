@@ -1,6 +1,5 @@
 package view;
 
-import controller.SaveDate;
 import main.ShowProgramDetails;
 
 import java.util.Scanner;
@@ -15,10 +14,6 @@ public abstract class ConsoleViewIn {
             String command = scanner.nextLine();
             if (ConsoleCommands.SET_DATE.getMatcher(command).matches()) {//0
                 SplitCommand.setDate(command);
-                break;
-            } else if (command.equals("file")) {
-                SplitCommand.setDate("Set Date 1398/08/17");
-                SaveDate.UploadFile();
                 break;
             } else {
                 System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!");
@@ -85,10 +80,9 @@ public abstract class ConsoleViewIn {
             } else if (ConsoleCommands.NEXT_DAY.getMatcher(command).matches()) {//20
                 SplitCommand.goNextDay(command);
                 System.out.println("\n");
-            } else if (command.equalsIgnoreCase("show details") ||
-                    command.equalsIgnoreCase("000")) {//0000 test
-                ShowProgramDetails.run();
-            } else {//21
+            } else if (command.equalsIgnoreCase("show details")) {//21
+                ShowProgramDetails.run("NOT FINISHED");
+            } else {//22
                 System.err.println("INVALID COMMAND! PLEASE TRY AGAIN!\n");
             }
         }

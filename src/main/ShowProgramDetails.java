@@ -8,13 +8,17 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ShowProgramDetails {
-    public static void run() {
+    public static void run(String status) {
         while (true) {
             System.out.println("Choose which one would you like to show :");
             System.out.println("1.Objects details");
             System.out.println("2.Lists details");
             System.out.println("3.Workers schedule");
-            System.out.println("4.back to program");
+            if (status.equalsIgnoreCase("FINISHED")) {
+                System.out.println("4.Exit program");
+            } else {
+                System.out.println("4.Back");
+            }
             Scanner scanner = ConsoleViewIn.getScanner();
             String command = scanner.nextLine();
             if (command.equalsIgnoreCase("4") ||
@@ -79,7 +83,7 @@ public class ShowProgramDetails {
     }
 
     private static void divide() {
-        for (int i = 0; i <= 40; i++)
+        for (int i = 0; i <= 80; i++)
             System.out.print("-");
         System.out.println();
     }

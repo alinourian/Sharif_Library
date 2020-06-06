@@ -6,7 +6,7 @@ import enums.Type;
 import java.util.HashMap;
 
 public abstract class Store {
-    private static HashMap<Book, Integer> booksForSale = new HashMap<>();
+    private static final HashMap<Book, Integer> booksForSale = new HashMap<>();
 
     public static void sellBook(Book book) {
         booksForSale.replace(book, booksForSale.get(book) - 1);

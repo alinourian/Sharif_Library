@@ -64,27 +64,27 @@ public abstract class CentralManagement {
         return null;
     }
 
-    public static Professor getProfessorByNCInAllProfessors(long nationalCode) {
+    public static Professor getProfessorByNCInAllProfessors(String nationalCode) {
         for (Professor professor : allProfessors) {
-            if (professor.getNationalCode() == nationalCode) {
+            if (professor.getNationalCode().equals(nationalCode)) {
                 return professor;
             }
         }
         return null;
     }
 
-    public static Professor getProfessorByNCInAllActiveProfessors(long nationalCode) {
+    public static Professor getProfessorByNCInAllActiveProfessors(String nationalCode) {
         for (Professor professor : allActiveProfessors) {
-            if (professor.getNationalCode() == nationalCode) {
+            if (professor.getNationalCode().equals(nationalCode)) {
                 return professor;
             }
         }
         return null;
     }
 
-    public static Employee getEmployeeByNCInAllEmployees(long nationalCode) {
+    public static Employee getEmployeeByNCInAllEmployees(String nationalCode) {
         for (Employee employee : allEmployees) {
-            if (employee.getNationalCode() == nationalCode) {
+            if (employee.getNationalCode().equals(nationalCode)) {
                 return employee;
             }
         }

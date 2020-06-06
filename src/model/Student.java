@@ -10,7 +10,7 @@ public class Student extends Person {
     private long budget;
     private String department;
 
-    public Student(String fullName, int age, long nationalCode, Gender gender,
+    public Student(String fullName, int age, String nationalCode, Gender gender,
                    int studentId, int yearOfEntry, String grade, long budget, String department) {
         super(fullName, age, nationalCode, gender);
         this.studentId = studentId;

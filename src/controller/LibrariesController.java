@@ -11,9 +11,6 @@ public class LibrariesController {
 
     private final MyDate startDate;
     private MyDate currentDay;
-    private CentralLibrary centralLibrary = CentralLibrary.getInstance();
-    private LibraryA libraryA = LibraryA.getInstance();
-    private LibraryB libraryB = LibraryB.getInstance();
 
     public static LibrariesController getInstance() {
         if(instance == null) {
@@ -79,10 +76,10 @@ public class LibrariesController {
         ConsoleViewOut.addBook(addBookStatus, book);
     }
 
-    public void createStudent(String fullName, int age, long nationalCode, Gender gender, int studentId,
+    public void createStudent(String fullName, int age, String nationalCode, Gender gender, int studentId,
                               int yearOfEntry, String grade, long budget, String department) {
         for (Student stu : CentralManagement.getAllStudents()) {
-            if (stu.getStudentId() == studentId || stu.getNationalCode() == nationalCode) {
+            if (stu.getStudentId() == studentId || stu.getNationalCode().equals(nationalCode)) {
                 ConsoleViewOut.createPerson(stu, false);
                 return;
             }
@@ -93,10 +90,10 @@ public class LibrariesController {
         ConsoleViewOut.createPerson(student, true);
     }
 
-    public void createProfessor(String fullName, int age, long nationalCode, Gender gender,
+    public void createProfessor(String fullName, int age, String nationalCode, Gender gender,
                               int yearOfEntry, long budget, String department) {
         for (Professor pro : CentralManagement.getAllProfessors()) {
-            if (pro.getNationalCode() == nationalCode) {
+            if (pro.getNationalCode().equals(nationalCode)) {
                 ConsoleViewOut.createPerson(pro, false);
                 return;
             }
@@ -107,10 +104,10 @@ public class LibrariesController {
         ConsoleViewOut.createPerson(professor, true);
     }
 
-    public void createWorker(String fullName, int age, long nationalCode,
+    public void createWorker(String fullName, int age, String nationalCode,
                              Gender gender, Libraries libraries) {
         for (Employee emp : CentralManagement.getAllEmployees()) {
-            if (emp.getNationalCode() == nationalCode) {
+            if (emp.getNationalCode().equals(nationalCode)) {
                 ConsoleViewOut.createPerson(emp, false);
                 return;
             }
@@ -134,7 +131,7 @@ public class LibrariesController {
         }
     }
 
-    public void addProfessor(long nationalCode) {
+    public void addProfessor(String nationalCode) {
         Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
         if (professor == null) {
             ConsoleViewOut.addProfessorFailed(nationalCode);
@@ -148,9 +145,9 @@ public class LibrariesController {
         }
     }
 
-    public void addEmployee(long nationalCode, Libraries libraries) {
+    public void addEmployee(String nationalCode, Libraries libraries) {
         for (Employee employee : CentralManagement.getAllEmployees()) {
-            if (employee.getNationalCode() == nationalCode) {
+            if (employee.getNationalCode().equals(nationalCode)) {
                 if (CentralManagement.allActiveEmployees.contains(employee)) {
                     ConsoleViewOut.addPerson(employee, false);
                     return;
@@ -199,7 +196,7 @@ public class LibrariesController {
         }
     }
 
-    public void depositProfessor(long nationalCode, long increase) {
+    public void depositProfessor(String nationalCode, long increase) {
         Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
         if (professor == null) {
             ConsoleViewOut.depositFailed();
@@ -209,7 +206,7 @@ public class LibrariesController {
         }
     }
 
-    public void setSchedule(long nationalCode, Libraries libraries, ArrayList<WeekDays> schedule) {
+    public void setSchedule(String nationalCode, Libraries libraries, ArrayList<WeekDays> schedule) {
         Employee employee = CentralManagement.getEmployeeByNCInAllEmployees(nationalCode);
         if (employee == null) {
             ConsoleViewOut.setSchedule(nationalCode, SetSchedule.WORKER_NOT_EXIST);
@@ -246,7 +243,7 @@ public class LibrariesController {
         }
     }
 
-    public void findBookForProfessors(long nationalCode, String bookName, long ISBN, int publishedYear) {
+    public void findBookForProfessors(String nationalCode, String bookName, long ISBN, int publishedYear) {
         if (CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode) == null) {
             ConsoleViewOut.findBookFailed(false);
         } else {
@@ -283,7 +280,7 @@ public class LibrariesController {
     }
 
     public void loanBookInCentralLibraryForProfessor(long ISBN, int publishedYear, Libraries library,
-                                                     long nationalCode, MyTime loanTime, MyDate giveBackDate) {
+                                                     String nationalCode, MyTime loanTime, MyDate giveBackDate) {
         if (library == Libraries.CENTRAL_LIBRARY) {
             Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
             if (professor == null) {
@@ -341,7 +338,7 @@ public class LibrariesController {
     }
 
     public void loanBookInLibrary_A_B_ForProfessor(String bookNameOrWriter, int publishedYear, String translator
-            , Libraries library, long nationalCode, MyTime loanTime, MyDate giveBackDate) {
+            , Libraries library, String nationalCode, MyTime loanTime, MyDate giveBackDate) {
         Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
         if (library == Libraries.LIBRARY_A) {
             if (professor == null) {
@@ -411,7 +408,7 @@ public class LibrariesController {
         }
     }
 
-    public void giveBackBookFromProfessor(Book book, Libraries library, long nationalCode, MyTime time) {
+    public void giveBackBookFromProfessor(Book book, Libraries library, String nationalCode, MyTime time) {
         Professor professor = CentralManagement.getProfessorByNCInAllActiveProfessors(nationalCode);
         if (professor == null) {
             ConsoleViewOut.giveBackBook(GiveBackBook.PERSON_NOT_MEMBER);
@@ -535,7 +532,7 @@ public class LibrariesController {
     }
 
     public void sellBookToProfessor(String bookName, long ISBN, int publishedYear,
-                                    long nationalCode, MyTime time, String discountCode) {
+                                    String nationalCode, MyTime time, String discountCode) {
         Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
         Book test = new Book(bookName, ISBN, publishedYear);
         Book book = CentralLibrary.getInstance().searchBookInStore(test);
@@ -591,7 +588,7 @@ public class LibrariesController {
     }
 
     public void giveBackBookToStoreFromProfessor(String bookName, long ISBN, int publishedYear,
-                                               long nationalCode, MyTime time) {
+                                               String nationalCode, MyTime time) {
         Professor professor = CentralManagement.getProfessorByNCInAllProfessors(nationalCode);
         if (professor == null) {
             ConsoleViewOut.giveBackBookToStore(GiveBackBookToStore.PERSON_NOT_EXIST);
@@ -803,7 +800,7 @@ public class LibrariesController {
         }
     }
 
-    private void doLoanForProfessor(long nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
+    private void doLoanForProfessor(String nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
         if (calcWeekDay(giveBackDate) == null) {
             ConsoleViewOut.loanBookFailed(LoanBook.DATE_PASSED);
             return;
@@ -846,7 +843,7 @@ public class LibrariesController {
         book.getBorrowers().put(student, giveBackDate);
     }
 
-    private void setLoanBookStringForProfessor(long nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
+    private void setLoanBookStringForProfessor(String nationalCode, Book book, MyTime loanTime, MyDate giveBackDate) {
         Employee employee = CentralManagement.getWorkerByTime(book.getBookPlace(), calcWeekDay(currentDay), loanTime.getHour());
         String string = book.getBookDetails() + ", Professor, " + nationalCode +
                 ", " + currentDay + ", " + loanTime + ", " + giveBackDate;
